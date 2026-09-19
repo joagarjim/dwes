@@ -17,3 +17,7 @@ Este repositorio contiene los materiales y recursos del módulo.
 - APIs REST
 - Laravel
 - Proyecto final
+
+### Prueba de Git
+
+Estamos aprendiendo el funcionamiento de Git y GitHub.
