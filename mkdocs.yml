@@ -33,7 +33,8 @@ nav:
       - 4. Arquitectura de tres capas: unidad-01/04-arquitectura-tres-capas.md
       - 5. Capas físicas y capas lógicas: unidad-01/05-capas-fisicas-logicas.md
       - 6. Introducción al patrón MVC: unidad-01/06-patron-mvc.md
-      - 7. Servidores web y tecnologías de servidor: unidad-01/07-servidores-tecnologias.md            
+      - 7. Servidores web y tecnologías de servidor: unidad-01/07-servidores-tecnologias.md
+      - 8. Preparación del entorno de desarrollo: unidad-01/08-entorno-desarrollo.md         
 markdown_extensions:
   - admonition
   - attr_list
