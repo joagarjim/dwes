@@ -28,7 +28,7 @@ nav:
   - Unidad 1. Arquitecturas web y entorno de desarrollo:
       - Presentación: unidad-01/index.md
       - 1. Cómo funciona una aplicación web: unidad-01/01-funcionamiento-web.md
-
+      - 2. Páginas estáticas y dinámicas: unidad-01/02-paginas-estaticas-dinamicas.md
 markdown_extensions:
   - admonition
   - attr_list
