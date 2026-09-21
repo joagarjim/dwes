@@ -31,6 +31,7 @@ nav:
       - 2. Páginas estáticas y dinámicas: unidad-01/02-paginas-estaticas-dinamicas.md
       - 3. Frontend, backend y full stack: unidad-01/03-frontend-backend-fullstack.md
       - 4. Arquitectura de tres capas: unidad-01/04-arquitectura-tres-capas.md
+      - 5. Capas físicas y capas lógicas: unidad-01/05-capas-fisicas-logicas.md
 markdown_extensions:
   - admonition
   - attr_list
