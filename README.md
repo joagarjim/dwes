@@ -4,9 +4,9 @@ Materiales y documentación del módulo de **2º DAW**.
 
 **IES Portada Alta · Curso 2026/27**
 
-## Primeros pasos con Git y GitHub
+Este repositorio contiene los materiales, ejemplos y actividades del módulo.
 
-Este repositorio contiene los materiales y recursos del módulo.
+La documentación se publica con **MkDocs Material** mediante GitHub Pages.
 
 ## Contenidos
 
@@ -18,6 +18,13 @@ Este repositorio contiene los materiales y recursos del módulo.
 - Laravel
 - Proyecto final
 
-### Prueba de Git
+## Unidades
 
-Estamos aprendiendo el funcionamiento de Git y GitHub.
+- Unidad 1. Arquitecturas web y entorno de desarrollo.
+
+## Desarrollo local de la documentación
+
+```bash
+pip install -r requirements.txt
+mkdocs serve
+```

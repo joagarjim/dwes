@@ -1,0 +1,51 @@
+site_name: DWES · IES Portada Alta
+site_description: Materiales del módulo Desarrollo Web en Entorno Servidor de 2.º DAW
+site_author: Joaquín García
+
+theme:
+  name: material
+  language: es
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Cambiar al modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Cambiar al modo claro
+
+nav:
+  - Inicio: index.md
+  - Unidad 1. Arquitecturas web y entorno de desarrollo:
+      - Presentación: unidad-01/index.md
+      - 1. Cómo funciona una aplicación web: unidad-01/01-funcionamiento-web.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - javascripts/mermaid.js
+
+copyright: >-
+  Material elaborado por Joaquín García ·
+  Licencia CC BY-NC-SA
