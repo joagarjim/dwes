@@ -27,15 +27,13 @@ nav:
   - Inicio: index.md
   - Unidad 1. Arquitecturas web y entorno de desarrollo:
       - Presentación: unidad-01/index.md
-      - 1. Cómo funciona una aplicación web: unidad-01/01-funcionamiento-web.md
-      - 2. Páginas estáticas y dinámicas: unidad-01/02-paginas-estaticas-dinamicas.md
-      - 3. Frontend, backend y full stack: unidad-01/03-frontend-backend-fullstack.md
-      - 4. Arquitectura de tres capas: unidad-01/04-arquitectura-tres-capas.md
-      - 5. Capas físicas y capas lógicas: unidad-01/05-capas-fisicas-logicas.md
-      - 6. Introducción al patrón MVC: unidad-01/06-patron-mvc.md
-      #- 7. Preparación del entorno de desarrollo: unidad-01/07-entorno-desarrollo.md
-      #- 8. Primer proyecto con Apache y PHP: unidad-01/08-primer-proyecto-php.md
-      #- 9. Actividad final y comprobación: unidad-01/09-actividad-final.md   
+      - 1. Funcionamiento de una aplicación web: unidad-01/01-funcionamiento-web.md
+      - 2. Organización de una aplicación web: unidad-01/02-organizacion-aplicacion.md
+      - 3. Organización lógica y distribución física: unidad-01/03-organizacion-logica-distribucion-fisica.md
+      - 4. Introducción al patrón MVC: unidad-01/04-introduccion-mvc.md
+      - 5. Análisis de Moodle: unidad-01/05-analisis-moodle.md
+      - 6. Entorno y primer proyecto PHP: unidad-01/06-entorno-primer-proyecto-php.md
+      - 7. Actividad final de la unidad: unidad-01/07-actividad-final.md
 markdown_extensions:
   - admonition
   - attr_list
