@@ -1,4 +1,4 @@
-# 8. Preparación del entorno de desarrollo
+# 7. Preparación del entorno de desarrollo
 
 Un **entorno de desarrollo** es el conjunto de herramientas que utilizamos para escribir, ejecutar, comprobar y depurar nuestras aplicaciones.
 
@@ -24,7 +24,7 @@ flowchart TD
     A --> N["Navegador"]
 ```
 
-## 8.1. Objetivo
+## 7.1. Objetivo
 
 Al finalizar la preparación debemos poder confirmar que:
 
@@ -40,7 +40,7 @@ Al finalizar la preparación debemos poder confirmar que:
 !!! important "No instalaremos Apache ni PHP directamente en Windows"
     Apache y PHP estarán dentro de un contenedor Docker. De esta forma, todos trabajaremos con un entorno similar y evitaremos instalaciones diferentes en cada equipo.
 
-## 8.2. ¿Qué es WSL 2?
+## 7.2. ¿Qué es WSL 2?
 
 **Windows Subsystem for Linux 2**, o WSL 2, permite ejecutar un entorno Linux dentro de Windows.
 
@@ -62,7 +62,7 @@ flowchart TD
 
 WSL no sustituye a Windows. Ambos entornos conviven en el mismo ordenador.
 
-## 8.3. Comprobar WSL
+## 7.3. Comprobar WSL
 
 Abre PowerShell y ejecuta:
 
@@ -94,7 +94,7 @@ El estado `Stopped` es normal cuando Ubuntu no se está utilizando.
 !!! warning "Versión de WSL"
     En la columna `VERSION` debe aparecer `2`. No debemos confundirla con la versión de Ubuntu ni con el estado de la distribución.
 
-## 8.4. Instalar WSL
+## 7.4. Instalar WSL
 
 Este paso solo es necesario si WSL no está instalado.
 
@@ -121,7 +121,7 @@ wsl -l -v
 
 El usuario y la contraseña de Ubuntu no tienen que coincidir con los utilizados en Windows.
 
-## 8.5. Actualizar WSL
+## 7.5. Actualizar WSL
 
 Para actualizar WSL:
 
@@ -150,7 +150,7 @@ wsl -l -v
 !!! danger "No ejecutes comandos de reparación sin comprobar el problema"
     La mayoría de los equipos solo necesitan `wsl --install` o `wsl --update`. Los procedimientos de reparación deben utilizarse únicamente cuando exista un error concreto.
 
-## 8.6. ¿Qué es Docker?
+## 7.6. ¿Qué es Docker?
 
 Docker permite crear y ejecutar aplicaciones dentro de **contenedores**.
 
@@ -183,7 +183,7 @@ Imagen → crear → Contenedor
 
 Podemos crear varios contenedores a partir de una misma imagen.
 
-## 8.7. Docker Desktop
+## 7.7. Docker Desktop
 
 **Docker Desktop** proporciona en Windows:
 
@@ -206,7 +206,7 @@ Docker Desktop debe estar iniciado antes de ejecutar comandos de Docker.
 !!! note "Licencia"
     Docker Desktop puede utilizarse gratuitamente con fines educativos, personales y en determinadas organizaciones pequeñas. Su uso en otras organizaciones puede estar sujeto a las condiciones de licencia de Docker.
 
-## 8.8. Comprobar Docker
+## 7.8. Comprobar Docker
 
 En PowerShell ejecuta:
 
@@ -250,7 +250,7 @@ flowchart LR
     E --> X["Elimina el contenedor<br/>--rm"]
 ```
 
-## 8.9. ¿Qué es Docker Compose?
+## 7.9. ¿Qué es Docker Compose?
 
 Docker Compose permite definir y gestionar los servicios de un proyecto mediante un archivo YAML.
 
@@ -280,7 +280,7 @@ flowchart TD
 
 Crearemos nuestro primer archivo `compose.yaml` en el siguiente apartado.
 
-## 8.10. Visual Studio Code
+## 7.10. Visual Studio Code
 
 Visual Studio Code será el editor utilizado durante el módulo.
 
@@ -307,7 +307,7 @@ Atajo de teclado:
 Ctrl + K, Ctrl + O
 ```
 
-## 8.11. Terminal integrada
+## 7.11. Terminal integrada
 
 Podemos abrir la terminal desde:
 
@@ -332,7 +332,7 @@ PS C:\dwes\hola-mundo>
 !!! warning "La carpeta actual importa"
     Si ejecutamos un comando desde otra carpeta, es posible que el programa no encuentre `compose.yaml` o los archivos del proyecto.
 
-## 8.12. Extensiones de Visual Studio Code
+## 7.12. Extensiones de Visual Studio Code
 
 Abre el panel de extensiones mediante:
 
@@ -393,7 +393,7 @@ Spanish Language Pack for Visual Studio Code
 
 Esta extensión traduce la interfaz de Visual Studio Code al español.
 
-## 8.13. Comprobar PHP Intelephense
+## 7.13. Comprobar PHP Intelephense
 
 Crea temporalmente un archivo llamado:
 
@@ -421,7 +421,7 @@ Comprueba que:
 
 Después podremos eliminar este archivo, ya que crearemos el proyecto definitivo en el apartado siguiente.
 
-## 8.14. Configuración básica de VS Code
+## 7.14. Configuración básica de VS Code
 
 Cada proyecto podrá incluir una carpeta:
 
@@ -453,7 +453,7 @@ Esta configuración:
 
 La configuración se aplicará únicamente al proyecto que contiene la carpeta `.vscode`.
 
-## 8.15. Comprobación final
+## 7.15. Comprobación final
 
 Antes de comenzar el primer proyecto, comprueba:
 
@@ -474,7 +474,7 @@ Antes de comenzar el primer proyecto, comprueba:
 
 Si todas las comprobaciones son correctas, el equipo está preparado para crear el primer proyecto PHP.
 
-## 8.16. Materiales de apoyo
+## 7.16. Materiales de apoyo
 
 Para realizar la instalación paso a paso puedes consultar:
 

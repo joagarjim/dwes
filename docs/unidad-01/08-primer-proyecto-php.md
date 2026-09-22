@@ -1,4 +1,4 @@
-# 9. Primer proyecto con Apache y PHP
+# 8 Primer proyecto con Apache y PHP
 
 En este apartado crearemos nuestro primer proyecto PHP utilizando el entorno que hemos preparado.
 
@@ -25,7 +25,7 @@ flowchart LR
     N <-->|"localhost:8080"| A
 ```
 
-## 9.1. Crear la carpeta del proyecto
+## 8.1. Crear la carpeta del proyecto
 
 Crea una carpeta llamada:
 
@@ -50,7 +50,7 @@ Selecciona `hola-mundo`.
 !!! important "Abrir la carpeta completa"
     No debemos abrir únicamente un archivo. Visual Studio Code debe trabajar con la carpeta raíz del proyecto.
 
-## 9.2. Estructura del proyecto
+## 8.2. Estructura del proyecto
 
 Crearemos esta estructura:
 
@@ -75,7 +75,7 @@ Cada elemento tendrá una función:
 | `index.php` | Página principal |
 | `info.php` | Muestra temporalmente la configuración de PHP |
 
-## 9.3. Crear `compose.yaml`
+## 8.3. Crear `compose.yaml`
 
 En la carpeta principal del proyecto crea:
 
@@ -98,7 +98,7 @@ services:
 !!! warning "La indentación es importante"
     YAML utiliza espacios para representar la estructura. No debemos utilizar tabulaciones ni eliminar la indentación.
 
-## 9.4. Entender `compose.yaml`
+## 8.4. Entender `compose.yaml`
 
 ### Servicios
 
@@ -170,7 +170,7 @@ flowchart LR
     A --> C
 ```
 
-## 9.5. Validar la configuración
+## 8.5. Validar la configuración
 
 Abre la terminal integrada de Visual Studio Code:
 
@@ -194,7 +194,7 @@ Este comando comprueba la sintaxis y muestra la configuración interpretada por 
 
 Si existe un error de indentación o sintaxis, debemos corregirlo antes de continuar.
 
-## 9.6. Crear `index.php`
+## 8.6. Crear `index.php`
 
 Dentro de `src`, crea:
 
@@ -239,7 +239,7 @@ PHP ejecutará:
 
 y sustituirá esa instrucción por el valor correspondiente antes de enviar la respuesta.
 
-## 9.7. Crear la configuración de VS Code
+## 8.7. Crear la configuración de VS Code
 
 Dentro del proyecto crea:
 
@@ -265,7 +265,7 @@ Escribe:
 
 Esta configuración solo se aplicará al proyecto `hola-mundo`.
 
-## 9.8. Iniciar el entorno
+## 8.8. Iniciar el entorno
 
 Antes de continuar, comprueba que Docker Desktop está funcionando.
 
@@ -295,7 +295,7 @@ flowchart TD
     P --> A["Inicia Apache y PHP"]
 ```
 
-## 9.9. Comprobar el contenedor
+## 8.9. Comprobar el contenedor
 
 Ejecuta:
 
@@ -316,7 +316,7 @@ La diferencia es:
 - `docker compose ps` muestra los servicios del proyecto actual.
 - `docker ps` muestra todos los contenedores que se están ejecutando.
 
-## 9.10. Abrir la aplicación
+## 8.10. Abrir la aplicación
 
 Abre el navegador y accede a:
 
@@ -339,7 +339,7 @@ Esto confirma que:
 4. El volumen conecta `src` con el contenedor.
 5. El servidor devuelve la respuesta al navegador.
 
-## 9.11. Comprobar los cambios en tiempo real
+## 8.11. Comprobar los cambios en tiempo real
 
 Modifica en `index.php`:
 
@@ -361,7 +361,7 @@ flowchart LR
 !!! note "Código e infraestructura"
     El contenedor proporciona la infraestructura. El código permanece en nuestra carpeta `src`, donde podemos modificarlo desde Visual Studio Code.
 
-## 9.12. Crear `info.php`
+## 8.12. Crear `info.php`
 
 Dentro de `src`, crea:
 
@@ -396,7 +396,7 @@ Busca los siguientes datos:
 !!! danger "Eliminar `info.php`"
     `phpinfo()` muestra información detallada sobre el servidor. Puede resultar útil durante el desarrollo, pero no debe permanecer accesible en una aplicación publicada. Elimina `info.php` al terminar la actividad.
 
-## 9.13. Acceder al contenedor
+## 8.13. Acceder al contenedor
 
 Para abrir una terminal dentro del contenedor:
 
@@ -441,7 +441,7 @@ exit
 !!! warning "Comprueba en qué terminal estás"
     Antes de ejecutar un comando, observa el prompt. No es lo mismo trabajar en PowerShell que dentro del contenedor Linux.
 
-## 9.14. Consultar la configuración de PHP
+## 8.14. Consultar la configuración de PHP
 
 Dentro del contenedor podemos ejecutar:
 
@@ -471,7 +471,7 @@ php -i | grep file_uploads
 
 No modificaremos todavía la configuración. El objetivo es aprender a localizarla y consultarla.
 
-## 9.15. Consultar los registros
+## 8.15. Consultar los registros
 
 Para mostrar los registros del servicio:
 
@@ -494,7 +494,7 @@ Los registros pueden ayudarnos a detectar:
 - Peticiones recibidas.
 - Fallos durante la ejecución.
 
-## 9.16. Provocar y localizar un error
+## 8.16. Provocar y localizar un error
 
 Modifica temporalmente `index.php` y elimina el punto y coma de una instrucción:
 
@@ -521,7 +521,7 @@ Guarda y actualiza nuevamente el navegador.
 !!! tip "Equivocarse forma parte del desarrollo"
     Lo importante no es evitar todos los errores, sino aprender a interpretar los mensajes y localizar su causa.
 
-## 9.17. Detener el entorno
+## 8.17. Detener el entorno
 
 Cuando terminemos de trabajar:
 
@@ -542,7 +542,7 @@ Para volver a iniciar el entorno:
 docker compose up -d
 ```
 
-## 9.18. Comandos básicos
+## 8.18. Comandos básicos
 
 | Comando | Función |
 | --- | --- |
@@ -555,7 +555,7 @@ docker compose up -d
 | `docker compose down` | Detiene y elimina los contenedores |
 | `docker ps` | Muestra todos los contenedores activos |
 
-## 9.19. Recorrido completo
+## 8.19. Recorrido completo
 
 ```mermaid
 sequenceDiagram
@@ -576,7 +576,7 @@ sequenceDiagram
     N-->>U: Muestra la página
 ```
 
-## 9.20. Comprobación final
+## 8.20. Comprobación final
 
 Antes de finalizar, comprueba:
 

@@ -1,4 +1,4 @@
-# 10. Actividad final y comprobación de la unidad
+# 9. Actividad final y comprobación de la unidad
 
 Esta actividad permitirá comprobar que comprendes los fundamentos de las aplicaciones web y que has preparado correctamente el entorno de desarrollo que utilizaremos durante el módulo.
 
@@ -17,7 +17,7 @@ flowchart LR
     P --> R
 ```
 
-## 10.1. Objetivos
+## 9.1. Objetivos
 
 Al completar la actividad deberás ser capaz de:
 
@@ -33,7 +33,7 @@ Al completar la actividad deberás ser capaz de:
 - Ejecutar y modificar una aplicación PHP.
 - Consultar el estado y los registros del contenedor.
 
-## 10.2. Parte A: análisis de una aplicación web
+## 9.2. Parte A: análisis de una aplicación web
 
 Elige una aplicación web que utilices habitualmente.
 
@@ -73,7 +73,7 @@ flowchart LR
     F --> U
 ```
 
-## 10.3. Parte B: crear el proyecto
+## 9.3. Parte B: crear el proyecto
 
 Crea un proyecto llamado:
 
@@ -102,7 +102,7 @@ apellido-nombre-ud01/
 
 No debes copiar directamente la carpeta completa de otro compañero. Debes crear y comprender tu propio proyecto.
 
-## 10.4. Configuración de Docker
+## 9.4. Configuración de Docker
 
 El archivo `compose.yaml` debe definir:
 
@@ -129,7 +129,7 @@ Comprueba el servicio:
 docker compose ps
 ```
 
-## 10.5. Aplicación PHP
+## 9.5. Aplicación PHP
 
 El archivo `index.php` debe generar una página HTML válida y contener código PHP.
 
@@ -155,7 +155,7 @@ El programa mostrará:
 !!! tip "No es necesario conocer todavía todo PHP"
     Puedes consultar la documentación y utilizar las explicaciones proporcionadas. Lo importante es comprender qué instrucciones se ejecutan en el servidor.
 
-## 10.6. Presentación de la página
+## 9.6. Presentación de la página
 
 La página debe contener como mínimo:
 
@@ -171,7 +171,7 @@ Puedes añadir CSS para mejorar el aspecto, aunque no será necesario utilizar u
 !!! note "CSS es opcional"
     Se valorará que la página sea legible y esté ordenada. El objetivo principal de esta unidad no es evaluar el diseño visual.
 
-## 10.7. Comprobaciones obligatorias
+## 9.7. Comprobaciones obligatorias
 
 Realiza las siguientes comprobaciones:
 
@@ -227,7 +227,7 @@ docker compose logs
 docker compose down
 ```
 
-## 10.8. Explicación del proyecto
+## 9.8. Explicación del proyecto
 
 Incluye en la entrega una breve explicación respondiendo:
 
@@ -242,7 +242,7 @@ Incluye en la entrega una breve explicación respondiendo:
 9. ¿Qué diferencia existe entre `docker compose up -d` y `docker compose down`?
 10. ¿Cómo comprobarías un error producido durante la ejecución?
 
-## 10.9. Evidencias
+## 9.9. Evidencias
 
 Incluye tres capturas:
 
@@ -279,7 +279,7 @@ y el contenido generado por la aplicación.
 !!! warning "Protección de datos"
     Revisa las capturas antes de entregarlas. No deben mostrar contraseñas, datos privados ni información ajena a la actividad.
 
-## 10.10. Preparar la entrega
+## 9.10. Preparar la entrega
 
 Antes de comprimir el proyecto:
 
@@ -308,7 +308,7 @@ El PDF debe contener:
 - Explicación del proyecto.
 - Las tres capturas solicitadas.
 
-## 10.11. Entrega en Moodle
+## 9.11. Entrega en Moodle
 
 Entrega en la tarea correspondiente:
 
@@ -321,7 +321,7 @@ Antes de confirmar la entrega, abre ambos archivos y comprueba que funcionan.
 
 No es necesario utilizar Git ni GitHub para realizar esta actividad.
 
-## 10.12. Criterios de valoración
+## 9.12. Criterios de valoración
 
 | Aspecto | Puntuación |
 | --- | ---: |
@@ -344,7 +344,7 @@ No es necesario utilizar Git ni GitHub para realizar esta actividad.
 !!! important "Las incidencias técnicas se valorarán de forma razonable"
     Un problema de instalación no implica automáticamente suspender la actividad. Se valorará la comprensión, el trabajo realizado y la capacidad para localizar y comunicar el problema.
 
-## 10.13. Lista de comprobación del alumno
+## 9.13. Lista de comprobación del alumno
 
 ### Teoría
 
