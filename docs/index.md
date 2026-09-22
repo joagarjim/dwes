@@ -1,7 +1,7 @@
 # Desarrollo Web en Entorno Servidor
 
-Materiales y documentación del módulo **Desarrollo Web en Entorno Servidor** de **2.º de Desarrollo de Aplicaciones Web**.
-
+Materiales y documentación del módulo:
+**Desarrollo Web en Entorno Servidor** de **2.º de Desarrollo de Aplicaciones Web**.
 **IES Portada Alta · Curso 2026/27**
 
 ![Desarrollo Web en Entorno Servidor](assets/images/portada-dwes.png)
