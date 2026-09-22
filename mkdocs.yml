@@ -34,6 +34,14 @@ nav:
       - 5. Análisis de Moodle: unidad-01/05-analisis-moodle.md
       - 6. Entorno y primer proyecto PHP: unidad-01/06-entorno-primer-proyecto-php.md
       - 7. Actividad final de la unidad: unidad-01/07-actividad-final.md
+  - Unidad 2. El lenguaje PHP:
+      - Presentación: unidad-02/index.md
+      - 1. Fundamentos de PHP: unidad-02/01-fundamentos-php.md
+      - 2. Primeros formularios con PHP: unidad-02/02-formularios-php.md
+      - 3. Condiciones en PHP: unidad-02/03-condiciones.md
+      - 4. Bucles: unidad-02/04-bucles.md
+      - 5. Arrays: unidad-02/05-arrays.md
+      - 6. Funciones: unidad-02/06-funciones.md
 markdown_extensions:
   - admonition
   - attr_list

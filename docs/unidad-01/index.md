@@ -1,5 +1,7 @@
 # Unidad 1. Arquitecturas web y entorno de desarrollo
 
+![Arquitectura de una aplicación web](../assets/images/arquitectura-web-unidad-01.png)
+
 ## Presentación
 
 Cuando utilizamos una aplicación web intervienen distintos elementos: un navegador, una red, un servidor web y, en muchas ocasiones, un programa que genera una respuesta utilizando datos almacenados en una base de datos.
