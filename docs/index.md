@@ -4,6 +4,8 @@ Materiales y documentación del módulo **Desarrollo Web en Entorno Servidor** d
 
 **IES Portada Alta · Curso 2026/27**
 
+![Desarrollo Web en Entorno Servidor](assets/images/portada-dwes.png)
+
 ## Contenidos del módulo
 
 - Arquitecturas web y entorno de desarrollo.
