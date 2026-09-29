@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">PHP: del código a la página web</title>
+  <desc id="desc">Un archivo PHP recibe datos, los procesa y genera una página HTML que se muestra en el navegador.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1">
+      <stop stop-color="#111d42"/>
+      <stop offset="1" stop-color="#312666"/>
+    </linearGradient>
+    <linearGradient id="pane" x2="1" y2="1">
+      <stop stop-color="#ffffff" stop-opacity=".17"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".07"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="440" rx="22" fill="url(#bg)"/>
+  <circle cx="1030" cy="-20" r="230" fill="#7864d8" opacity=".15"/>
+  <circle cx="70" cy="390" r="170" fill="#38bdf8" opacity=".10"/>
+  <text x="78" y="72" fill="#c7d2fe" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="3">UNIDAD 02</text>
+  <text x="78" y="120" fill="#fff" font-family="Arial,sans-serif" font-size="43" font-weight="700">El lenguaje PHP</text>
+  <text x="79" y="154" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="19">Escribimos código que genera páginas dinámicas</text>
+  <rect x="75" y="205" width="270" height="163" rx="17" fill="url(#pane)" stroke="#7293e4"/>
+  <text x="99" y="241" fill="#92e4fa" font-family="Arial,sans-serif" font-size="17" font-weight="700">DATOS</text>
+  <text x="99" y="285" fill="#fff" font-family="monospace" font-size="21">nombre = Ana</text>
+  <text x="99" y="323" fill="#fff" font-family="monospace" font-size="21">edad = 20</text>
+  <path d="M360 285h86m-19-15 20 15-20 15" fill="none" stroke="#91dfff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="462" y="205" width="275" height="163" rx="17" fill="url(#pane)" stroke="#a9a1f2"/>
+  <text x="486" y="241" fill="#bcb5ff" font-family="Arial,sans-serif" font-size="17" font-weight="700">PHP · SERVIDOR</text>
+  <text x="486" y="285" fill="#fff" font-family="monospace" font-size="19">if ($edad &gt;= 18) {</text>
+  <text x="506" y="320" fill="#fff" font-family="monospace" font-size="19">echo 'Hola';</text>
+  <path d="M752 285h86m-19-15 20 15-20 15" fill="none" stroke="#91dfff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="855" y="205" width="270" height="163" rx="17" fill="url(#pane)" stroke="#6fcab6"/>
+  <text x="879" y="241" fill="#8ae8d5" font-family="Arial,sans-serif" font-size="17" font-weight="700">NAVEGADOR</text>
+  <rect x="879" y="260" width="221" height="79" rx="8" fill="#f8fafc"/>
+  <circle cx="896" cy="273" r="4" fill="#fb7185"/>
+  <circle cx="909" cy="273" r="4" fill="#fbbf24"/>
+  <circle cx="922" cy="273" r="4" fill="#34d399"/>
+  <text x="897" y="312" fill="#213052" font-family="Arial,sans-serif" font-size="20" font-weight="700">Hola, Ana</text>
+</svg>

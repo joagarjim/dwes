@@ -22,3 +22,5 @@ Materiales y documentación del módulo:
 ## Comenzamos
 
 [Acceder a la Unidad 1](unidad-01/index.md){ .md-button .md-button--primary }
+
+[Acceder a la Unidad 2](unidad-02/index.md){ .md-button .md-button--primary }
