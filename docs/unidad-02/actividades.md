@@ -180,10 +180,6 @@ Crea un array `$menus` con **tres menús**. Cada menú será un array asociativo
 
 Después, asigna `$menu = $menus[0]` para trabajar con el primero: muestra sus claves mediante `array_keys()`; comprueba con `isset()` si tiene `'postre'`; añade la clave `'bebida'` y elimina `'segundo'` mediante `unset()`. Añade también `'observaciones' => null` y compara el resultado de `isset($menu['observaciones'])` con `array_key_exists('observaciones', $menu)`. Explica la diferencia. Finalmente, copia el menú y ordena la copia por sus valores con `asort()`; comprueba que cada plato conserva su clave y que el menú original no ha cambiado.
 
----
-
-*Referencia didáctica: la secuencia parte de las actividades de [Aitor Medrano](https://aitor-medrano.github.io/dwes2122/02php.html) y se adapta al orden y los objetivos de esta unidad. Los ejercicios 4 a 6 amplían la práctica de operadores y tipos; el ejercicio 8 amplía el trabajo con formularios POST y distintos tipos de campos. Los ejercicios 9 a 11 retoman problemas de condiciones de Aitor, los ejercicios 12 y 13 incorporan `match` y la comprobación de formularios, los ejercicios 14 a 20 practican bucles y acumulación, y los ejercicios 21 a 28 adaptan problemas de arrays, operaciones y generación de tablas.*
-
 ## Bloque 6. Funciones
 
 **Ejercicios 29 a 37 · Entrega del bloque 6 en Moodle.** Realiza los ejercicios después de estudiar el [apartado 6: Funciones en PHP](06-funciones.md). Entrega juntos los archivos en una única tarea de Moodle. Guarda las soluciones en la carpeta `unidad-02`.
@@ -223,3 +219,79 @@ Define una función con nombre que duplique un entero y llámala mediante una va
 ### Ejercicio 37 (`encabezado.php`, `pie.php` y `ej37.php`). Página con fragmentos compartidos
 
 Crea una cabecera con el comienzo del documento HTML y un título variable, y un pie con el cierre del documento. Incluye ambos desde `ej37.php`, que contendrá un encabezado `<h1>` y un párrafo propios. Define `$titulo` antes de incluir la cabecera y escápalo al mostrarlo. Crea una segunda página con otro título y contenido que reutilice los mismos fragmentos. Explica por qué el archivo incluido puede leer `$titulo` y en qué se diferencia esto del ámbito local de una función.
+
+
+## Bloque 7. Funciones predefinidas de PHP
+
+**Ejercicios 38 a 45 · Entrega del bloque 7 en Moodle.** Realiza los ocho ejercicios después de estudiar el [apartado 7: Funciones predefinidas de PHP](07-funciones-predefinidas.md). Entrega juntos los archivos del bloque en una única tarea de Moodle. Guarda las soluciones en la carpeta `unidad-02`.
+
+Utiliza las funciones indicadas en cada enunciado. Presenta los resultados en HTML de forma legible y escapa los textos al mostrarlos. Las funciones `mb_*` requieren la extensión `mbstring` en el entorno PHP.
+
+### Ejercicio 38 (`ej38.php`). Preparar y analizar un nombre
+
+Parte de la cadena `'   María Muñoz   '`. Muestra el original y el resultado de aplicar `trim()`, `ltrim()` y `rtrim()`. Utiliza `<pre>` o corchetes visibles para apreciar los espacios. Comprueba que el nombre original no cambia si guardas cada resultado en otra variable.
+
+Con el nombre limpio, muestra:
+
+1. Su longitud mediante `strlen()` y `mb_strlen(..., 'UTF-8')`. Explica por qué los resultados difieren y recuerda que el espacio entre nombre y apellido también cuenta.
+2. Sus versiones en mayúsculas y minúsculas con `mb_strtoupper()` y `mb_strtolower()`.
+3. Los dos primeros caracteres con `mb_substr()`.
+
+Después aplica `strtoupper()` y `strtolower()` a `'Hola PHP'`, y `substr()` a `'ABC12345'` para obtener `'ABC'`, `'12345'` y `'45'`. Presenta cada operación junto a su resultado.
+
+### Ejercicio 39 (`ej39.php`). Buscar sin perder la posición cero
+
+Parte del texto `'PHP y Laravel'`. Busca `'PHP'`, `'Laravel'` y `'Python'` mediante `strpos()`. Para cada búsqueda, muestra la posición encontrada o «No encontrado», utilizando una comparación estricta con `false`. Añade una explicación de por qué la posición `0` no significa que la búsqueda haya fallado.
+
+Después, con el nombre de archivo `'ejercicio.php'`, muestra el resultado de comprobar si contiene `'ejercicio'`, si empieza por `'ej'` y si termina en `'.php'` o `'.html'`. Utiliza `str_contains()`, `str_starts_with()` y `str_ends_with()` y presenta los booleanos como «Sí» o «No». Prueba también con `'Ejercicio.PHP'` y explica qué cambia al distinguir mayúsculas y minúsculas.
+
+### Ejercicio 40 (`ej40.php`). Sustituir, separar y reunir
+
+Parte de `'PHP, JavaScript, PHP, Python'`. Sustituye todas las apariciones de `'PHP'` por `'Laravel'` con `str_replace()` y recoge en su cuarto argumento la cantidad de sustituciones realizadas. Muestra el texto original, el nuevo y el número de cambios.
+
+Divide el nuevo texto con `explode()` usando la coma como separador. Recorre el array, aplica `trim()` a cada elemento y guarda los valores limpios en otro array. Presenta los lenguajes en una lista HTML y vuelve a unirlos con `implode()`, separados por `' · '`. Comprueba que hay cuatro elementos y que se han realizado dos sustituciones. No elimines los valores repetidos.
+
+### Ejercicio 41 (`ej41.php`). Mensaje con saltos de línea
+
+Crea un formulario `POST` con un área de texto que se envíe a la misma página. Antes del primer envío, muestra solo el formulario. Comprueba que el dato recibido sea una cadena y que no esté vacío después de aplicar `trim()`; si no es válido, muestra un error.
+
+Presenta el mensaje conservando los saltos de línea mediante `nl2br()`, después de escapar el texto con `htmlspecialchars()`. Prueba con dos líneas y con el texto `<strong>Hola</strong>`: las etiquetas deben verse literalmente, sin poner el texto en negrita. Explica en un comentario por qué primero escapas el texto y después añades los saltos HTML.
+
+### Ejercicio 42 (`ej42.php`). Laboratorio de cálculos y redondeo
+
+Presenta en una tabla HTML la operación y el resultado de cada una de estas pruebas:
+
+1. `abs()` con `-8`, `8` y `0`.
+2. `pow()` para calcular `2³` y `7⁰`, y `sqrt()` para obtener la raíz de `81`.
+3. `round()` con `7.46` y `7.56` sin indicar decimales, y con `7.456` conservando dos decimales.
+4. `floor()` y `ceil()` con `7.9` y `-7.1`. Explica por qué redondear hacia abajo un negativo no equivale a quitarle los decimales.
+
+Finalmente, guarda `1234.567` en una variable y muestra su valor redondeado a dos decimales con `round()` y su versión para presentación con `number_format(..., 2, ',', '.')`. Utiliza `var_dump()` dentro de `<pre>` para comprobar que el primer resultado es numérico y el segundo es una cadena. Conserva la variable original para los cálculos.
+
+### Ejercicio 43 (`ej43.php`). Tiradas de dados y estadísticas
+
+Genera diez tiradas de un dado mediante `rand(1, 6)` y guárdalas en un array. Muéstralas en una lista HTML. Obtén la menor y la mayor mediante `min()` y `max()` y calcula la media con una suma acumulada mediante `foreach`. Presenta la media con dos decimales.
+
+Comprueba que todas las tiradas están entre `1` y `6` y que la media queda entre el menor y el mayor. Recarga varias veces y observa que pueden repetirse los resultados. Añade un comentario que explique por qué ahora podemos utilizar `min()` y `max()`, aunque en el ejercicio 22 calculáramos los extremos mediante comparaciones.
+
+### Ejercicio 44 (`ej44.php`). ¿Qué tipo tiene cada dato?
+
+Crea una lista con estos valores: `20`, `'20'`, `20.5`, `'12.5'`, `'hola'`, `false`, `null` y un array con dos lenguajes. Recórrela y muestra para cada dato su tipo con `gettype()` y su contenido con `var_dump()` dentro de `<pre>`.
+
+Comprueba también, mostrando «Sí» o «No», el resultado de `is_int()`, `is_float()`, `is_string()`, `is_bool()`, `is_array()`, `is_null()` e `is_numeric()` para cada valor.
+
+Después compara `is_numeric()` y `ctype_digit()` con las cadenas `'20'`, `'0'`, `'-3'`, `'12.5'`, `''` y `'12,5'`. Presenta los resultados en una tabla. Explica por qué `'20'` es numérico pero no tiene tipo `int`, y por qué `'-3'` es numérico pero no está formado exclusivamente por dígitos.
+
+### Ejercicio 45 (`ej45.php`). Comprobar antes de convertir
+
+Crea un formulario `POST` con un campo de texto para una edad, enviado a la misma página. Antes del primer envío, muestra solo el formulario. Comprueba en el servidor que el dato recibido sea una cadena formada por dígitos mediante `ctype_digit()`, después de aplicar `trim()`. Comprueba que representa una edad entre `0` y `120`; si no es válido, muestra un mensaje y no lo uses como edad.
+
+Si es válido, guárdalo como `int`, muestra la edad y comprueba con `var_dump()` que el dato recibido es una cadena y que la edad convertida es un entero. Prueba `'20'`, `'0'`, `'120'`, `'150'`, `'-3'`, `'12.5'`, `'hola'` y un envío vacío.
+
+En una sección independiente, compara con `var_dump()` el resultado de convertir `'hola'` a `int`, `12.9` a `int`, `'12.5'` a `float` y `20` a `string`. Explica por qué convertir no sustituye a validar.
+
+Consulta en el manual oficial la función `ctype_digit()` y añade al final de la página un enlace a su documentación y una frase que indique qué recibe y qué devuelve. Escapa los textos al insertarlos en HTML.
+
+---
+
+*Referencia didáctica: la secuencia parte de las actividades de [Aitor Medrano](https://aitor-medrano.github.io/dwes2122/02php.html) y se adapta al orden y los objetivos de esta unidad. Los ejercicios 4 a 6 amplían la práctica de operadores y tipos; el ejercicio 8 amplía el trabajo con formularios POST y distintos tipos de campos. Los ejercicios 9 a 11 retoman problemas de condiciones de Aitor, los ejercicios 12 y 13 incorporan `match` y la comprobación de formularios, los ejercicios 14 a 20 practican bucles y acumulación, los ejercicios 21 a 28 adaptan problemas de arrays, operaciones y generación de tablas; los ejercicios 29 a 37 practican funciones y reutilización de archivos; y los ejercicios 38 a 45 trabajan las funciones predefinidas explicadas en nuestros apuntes.*

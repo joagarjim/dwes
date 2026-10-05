@@ -6,7 +6,6 @@ theme:
   name: material
   language: es
   features:
-    - navigation.sections
     - navigation.top
     - content.code.copy
   palette:
@@ -24,7 +23,7 @@ theme:
         name: Cambiar al modo claro
 
 nav:
-  - Inicio: index.md
+  - Desarrollo Web en Entorno Servidor: index.md
   - Unidad 1. Arquitecturas web y entorno de desarrollo:
       - Presentación: unidad-01/index.md
       - 1. Funcionamiento de una aplicación web: unidad-01/01-funcionamiento-web.md
@@ -42,6 +41,8 @@ nav:
       - 4. Bucles: unidad-02/04-bucles.md
       - 5. Arrays: unidad-02/05-arrays.md
       - 6. Funciones: unidad-02/06-funciones.md
+      - 7. Funciones predefinidas: unidad-02/07-funciones-predefinidas.md
+      - 8. Actividad final de la unidad: unidad-02/08-actividad-final.md
 markdown_extensions:
   - admonition
   - attr_list

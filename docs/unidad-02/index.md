@@ -74,6 +74,13 @@ Seguiremos una secuencia progresiva: primero escribiremos instrucciones sencilla
 * Comprobación y conversión de tipos.
 * Consulta de la documentación oficial para elegir y utilizar funciones.
 
+## Actividad final
+
+Integra lo aprendido creando una tienda informática con catálogo,
+formulario y cálculo de presupuestos.
+
+[Consultar la actividad final](08-actividad-final.md){ .md-button .md-button--primary }
+
 ## Actividades de la unidad
 
 Los ejercicios están organizados en bloques que siguen los contenidos. Consulta la [relación de actividades](actividades.md) para ver los enunciados y las indicaciones de entrega. Al terminar los apartados prepararemos una práctica final de integración.

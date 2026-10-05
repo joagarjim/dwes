@@ -331,25 +331,83 @@ $triplicar = function (int $numero): int {
 echo $triplicar(4); // 12
 ```
 
-La función anónima puede necesitar un valor definido fuera de ella. `use` captura el valor en el momento de crearla:
+### Una misma operación de tres formas
+
+Vamos a sumar `5` y un incremento de `4`. Las tres versiones devolverán `9`, pero veremos cómo recibe cada función los datos.
+
+#### 1. Función tradicional: dos parámetros
+
+Empezamos con la forma que ya conocemos. La función recibe tanto el número como el incremento:
 
 ```php
 <?php
-$incremento = 2;
-$sumarIncremento = function (int $numero) use ($incremento): int {
+function sumarIncremento(int $numero, int $incremento): int
+{
+    return $numero + $incremento;
+}
+
+$incremento = 4;
+echo sumarIncremento(5, $incremento); // 9
+```
+
+En la llamada enviamos **dos argumentos**: `5` y el valor de `$incremento`, que es `4`. Dentro de la función, los parámetros reciben esos valores. La función no necesita acceder a ninguna variable exterior.
+
+#### 2. Función anónima: un parámetro y `use`
+
+Ahora guardamos una función sin nombre en una variable. En lugar de pasar el incremento en cada llamada, lo tomamos del exterior al definirla:
+
+```php
+<?php
+$incremento = 4;
+
+$sumarConUse = function (int $numero) use ($incremento): int {
     return $numero + $incremento;
 };
-echo $sumarIncremento(5); // 7
+
+echo $sumarConUse(5); // 9
 ```
 
-Una **función flecha** expresa de forma breve una operación que devuelve una expresión; también puede usar `$incremento` del ámbito exterior sin `use` explícito:
+Aquí enviamos **un solo argumento**, `5`. La función obtiene los dos datos de distinta manera:
+
+- `$numero` recibe el argumento de la llamada: `5`.
+- `use ($incremento)` captura el valor de la variable exterior al crear la función: `4`.
+
+`use` permite que esta función anónima utilice ese valor exterior sin añadirlo como otro parámetro. El punto y coma después de `}` cierra la asignación de la función a `$sumarConUse`.
+
+#### 3. Función flecha: la versión breve de la anterior
+
+Como solo queremos devolver una expresión, podemos escribir la función anónima de forma más corta:
 
 ```php
 <?php
-$incremento = 2;
-$sumarIncremento = fn (int $numero): int => $numero + $incremento;
-echo $sumarIncremento(5); // 7
+$incremento = 4;
+
+$sumarConFlecha = fn (int $numero): int => $numero + $incremento;
+
+echo $sumarConFlecha(5); // 9
 ```
+
+También enviamos **un solo argumento**, `5`. La función flecha captura automáticamente el valor de `$incremento`; no tenemos que escribir `use`. La expresión situada después de `=>` se devuelve sin escribir `return`.
+
+| Forma | Cómo obtiene el número | Cómo obtiene el incremento | Llamada |
+| --- | --- | --- | --- |
+| Tradicional | Parámetro | Segundo parámetro | `sumarIncremento(5, $incremento)` |
+| Anónima con `use` | Parámetro | Captura explícita del exterior | `$sumarConUse(5)` |
+| Flecha con `fn` y `=>` | Parámetro | Captura automática del exterior | `$sumarConFlecha(5)` |
+
+En este ejemplo, **las tres calculan `5 + 4 = 9`**. La tradicional recibe el incremento en cada llamada; las otras dos lo capturan por valor cuando se crean. No funcionan igual si cambiamos después la variable exterior:
+
+```php
+<?php
+// Después de definir las funciones anteriores:
+$incremento = 10;
+
+echo sumarIncremento(5, $incremento); // 15: recibe el nuevo valor 10.
+echo $sumarConUse(5);                // 9: había capturado el valor 4.
+echo $sumarConFlecha(5);             // 9: había capturado el valor 4.
+```
+
+Los tres ejemplos anteriores pueden reunirse en un mismo archivo para hacer esta comprobación. Para funciones con varios pasos o instrucciones, usaremos `function` y llaves; las funciones flecha son útiles cuando basta una expresión.
 
 Las veremos de nuevo cuando usemos funciones que reciben otras funciones, por ejemplo para transformar u ordenar arrays. Por ahora basta con reconocer la sintaxis y hacer una llamada sencilla.
 
