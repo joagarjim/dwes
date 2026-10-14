@@ -176,7 +176,11 @@ Situaremos los parámetros con valor por defecto después de los obligatorios. E
 
 ## 6.6. Número variable de argumentos y argumentos con nombre
 
-Cuando una función debe aceptar cualquier cantidad de números, `...` reúne los argumentos en un array:
+El operador `...` tiene dos usos relacionados. Para distinguirlos, debemos fijarnos en dónde aparece: **en la definición de la función** o **en la llamada**.
+
+### 6.6.1. Reunir los argumentos en un array: empaquetar
+
+Si escribimos `...` delante de un parámetro al definir una función, PHP reúne los argumentos recibidos en un array. Así podemos recibir una cantidad variable de argumentos:
 
 ```php
 <?php
@@ -189,9 +193,84 @@ function sumarVarios(int ...$numeros): int
     return $suma;
 }
 
-echo sumarVarios(1, 5, 9); // 15
-echo sumarVarios();        // 0: el total inicial no cambia.
+echo sumarVarios(3, 5, 2); // 10
 ```
+
+En la llamada enviamos **tres argumentos separados**: `3`, `5` y `2`. Dentro de la función, `$numeros` es un array que contiene esos valores:
+
+```php
+[3, 5, 2]
+```
+
+Por eso podemos recorrerlo con `foreach`. A esta operación la llamamos **empaquetar**: reunir varios argumentos en un array. La función se denomina **variádica**, porque admite una cantidad variable de argumentos. En `int ...$numeros`, el tipo `int` se aplica a cada argumento recibido; `$numeros` es el array que los reúne.
+
+Podemos llamar a la misma función con distintas cantidades de argumentos:
+
+```php
+echo sumarVarios(4, 6);       // 10
+echo sumarVarios(1, 2, 3, 4); // 10
+echo sumarVarios();          // 0: el array está vacío y la suma inicial no cambia.
+```
+
+### 6.6.2. Pasar los elementos de un array como argumentos: desempaquetar
+
+Volvamos a una función que espera dos argumentos:
+
+```php
+<?php
+function sumar(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+$pareja = [3, 5];
+```
+
+Como los valores están dentro de un array, podemos acceder a cada posición y pasarlos por separado:
+
+```php
+echo sumar($pareja[0], $pareja[1]); // 8
+```
+
+Si escribimos `...` delante del array **en la llamada**, PHP pasa sus elementos como argumentos separados:
+
+```php
+echo sumar(...$pareja); // 8
+```
+
+En este array indexado, el primer elemento (`3`) se asigna a `$a` y el segundo (`5`) a `$b`. Estas tres llamadas son equivalentes:
+
+```php
+sumar(3, 5);
+sumar($pareja[0], $pareja[1]);
+sumar(...$pareja);
+```
+
+A esta operación la llamamos **desempaquetar**: pasar los elementos de un array como argumentos separados.
+
+> **Atención:** `sumar($pareja)` pasa un único argumento: el array completo. No equivale a `sumar(...$pareja)` y no es una llamada válida a esta función, que espera dos enteros.
+
+### 6.6.3. Comparar los dos usos de `...`
+
+| Dónde aparece `...` | Qué hace | Ejemplo |
+| --- | --- | --- |
+| En la definición de la función | Reúne los argumentos en un array. | `function sumarVarios(int ...$numeros): int` |
+| En la llamada a la función | Pasa los elementos del array como argumentos separados. | `sumar(...$pareja)` |
+
+Los dos usos pueden aparecer juntos. Utilizando la función `sumarVarios()` definida antes:
+
+```php
+<?php
+$valores = [3, 5, 2];
+echo sumarVarios(...$valores); // 10
+```
+
+1. **En la llamada**, `...$valores` pasa `3`, `5` y `2` como tres argumentos separados.
+2. **En la definición**, `int ...$numeros` reúne esos argumentos en el array que recorre la función.
+
+**Recuerda:** al definir la función, `...` reúne; al llamarla, `...` separa.
+
+### 6.6.4. Otra forma de acceder a los argumentos
 
 Podemos resolver exactamente el mismo problema con las funciones `func_num_args()` y `func_get_arg()`, sin escribir parámetros en la definición:
 
@@ -212,13 +291,7 @@ echo sumarVariosClasica();        // 0
 
 `func_num_args()` devuelve cuántos argumentos llegaron (en la primera llamada, `3`); `func_get_arg($i)` obtiene uno por su posición (`0`, `1`, `2`). También existe `func_get_args()`, que devuelve **todos** los argumentos juntos en un array; podríamos recorrerlo con `foreach` en lugar de usar el `for`. En ambos ejemplos recibimos una cantidad variable de datos y calculamos lo mismo. Con `int ...$numeros`, PHP ya los reúne en `$numeros`, permite declarar el tipo de cada uno y nos evita las llamadas a `func_get_arg()`. Por eso lo utilizaremos normalmente.
 
-En sentido inverso, `...` **desempaqueta** un array para pasarlo como argumentos separados:
-
-```php
-<?php
-$pareja = [3, 5];
-echo sumar(...$pareja); // 8: equivale a sumar(3, 5).
-```
+### 6.6.5. Argumentos con nombre
 
 Desde PHP 8 podemos indicar a qué parámetro corresponde cada argumento **escribiendo su nombre**. Utilizaremos siempre esta misma función para comparar las llamadas:
 
