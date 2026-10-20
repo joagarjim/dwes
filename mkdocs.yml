@@ -43,6 +43,11 @@ nav:
       - 6. Funciones: unidad-02/06-funciones.md
       - 7. Funciones predefinidas: unidad-02/07-funciones-predefinidas.md
       - 8. Actividad final de la unidad: unidad-02/08-actividad-final.md
+  - Unidad 3. PHP Orientado a Objetos:
+      - Presentación: unidad-03/index.md
+      - 1. Clases y objetos en PHP: unidad-03/01-clases-objetos.md
+      - 2. Constructor y encapsulación: unidad-03/02-constructor-encapsulacion.md
+      - 3. Composición y elementos de clase: unidad-03/03-composicion-elementos-clase.md
 markdown_extensions:
   - admonition
   - attr_list
