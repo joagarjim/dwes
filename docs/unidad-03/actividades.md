@@ -1,6 +1,6 @@
 # Unidad 3. Actividades de programación orientada a objetos
 
-Los ejercicios se trabajan en casa. En clase revisaremos soluciones, dudas y errores frecuentes. Este documento se ampliará con los bloques siguientes.
+En clase revisaremos soluciones del bloque anterior, explicaremos los nuevos contenidos y comenzaremos sus ejercicios. Lo que no dé tiempo a terminar se completará en casa. Este documento se ampliará con los bloques siguientes.
 
 ## Indicaciones generales
 
@@ -282,5 +282,215 @@ Después de corregir los cuatro errores:
 7. Prueba construir una reserva para cero personas y muestra el mensaje de la excepción.
 
 Muestra el resultado de cada prueba. No cambies las propiedades a públicas para evitar los errores: el objetivo es utilizar correctamente la encapsulación.
+
+## Bloque 3: Relaciones entre objetos, constantes y miembros estáticos
+
+Estos cinco ejercicios corresponden al [apartado 3](03-composicion-elementos-clase.md). Tiempo orientativo de trabajo total: **2–3 horas y 15 minutos**, incluyendo lo que se avance en clase y las comprobaciones.
+
+Crea las carpetas `unidad_3/ej11` a `unidad_3/ej15`. Si tu proyecto utiliza el nombre `unidad-03`, mantén ese nombre de carpeta. Guarda cada clase en su propio archivo y utiliza `index.php` para las pruebas, salvo la excepción indicada en el ejercicio 15. No se requieren formularios, herencia ni bases de datos.
+
+Las propiedades serán privadas, salvo las constantes públicas que se indiquen. Los constructores comprobarán sus argumentos y lanzarán `InvalidArgumentException` si no son válidos. Muestra los resultados y los mensajes de error desde la página, no desde las clases.
+
+### Ejercicio 11. Libros que comparten autor
+
+Crea las clases `Autor` y `Libro`:
+
+| Clase | Propiedades privadas | Constructor |
+| --- | --- | --- |
+| `Autor` | `nombre` de tipo `string`. | Recibe el nombre. Aplica `trim()` y rechaza un nombre vacío. |
+| `Libro` | `titulo` de tipo `string`, `precio` de tipo `float` y `autor` de tipo `Autor`. | Recibe los tres datos. Limpia el título y rechaza el título vacío o el precio negativo. |
+
+En `Autor`, implementa:
+
+- `getNombre(): string`.
+- `setNombre(string $nombre): bool`: aplica `trim()`; si queda vacío, devuelve `false` sin modificar la propiedad. Si es válido, actualiza el nombre y devuelve `true`.
+
+En `Libro`, implementa `getTitulo(): string`, `getPrecio(): float` y `getAutor(): Autor`. No crees otro autor dentro de su constructor: guarda el objeto recibido.
+
+En `index.php`:
+
+1. Crea un único autor llamado `Ana López`.
+2. Crea dos libros asociados a ese mismo objeto: `Aprender PHP`, de `20.0` euros, y `Practicar PHP`, de `15.0` euros.
+3. Muestra el título, precio y nombre del autor de cada libro. Obtén el nombre mediante `getAutor()->getNombre()`.
+4. Cambia el nombre del autor a `Ana López García` y vuelve a mostrar ambos libros. Los dos deben mostrar el nombre actualizado.
+5. Intenta cambiar el nombre por una cadena de espacios. Comprueba que se rechaza y que ambos libros mantienen el nombre anterior.
+
+Responde mediante comentarios: ¿cuántos objetos has creado?, ¿por qué cambia el autor que muestran los dos libros?, ¿devolver el autor mediante un getter crea una copia independiente?
+
+### Ejercicio 12. Una biblioteca con un array de libros
+
+Copia las clases del ejercicio 11 en `ej12`, sin modificar los archivos originales. Añade `Biblioteca.php` con una propiedad privada `libros` de tipo `array`, inicialmente vacía.
+
+Implementa estos métodos:
+
+| Método | Comportamiento |
+| --- | --- |
+| `anadirLibro(Libro $libro): void` | Añade el objeto recibido al array. |
+| `getLibros(): array` | Devuelve el array para que la página pueda recorrerlo. |
+| `contarLibros(): int` | Devuelve el número de elementos del array. |
+| `calcularValorTotal(): float` | Recorre los libros y acumula sus precios. Si no hay libros, devuelve `0.0`. |
+
+Para añadir un elemento al array de la propiedad puedes utilizar `$this->libros[] = $libro;`. La propiedad privada y el parámetro de tipo `Libro` permiten controlar qué objetos se incorporan mediante ese método.
+
+En `index.php`:
+
+1. Crea una biblioteca vacía. Comprueba que contiene cero libros y que su valor es `0,00 €`.
+2. Crea dos autores y tres libros: `Aprender PHP`, de `20.0` euros; `Practicar PHP`, de `15.0` euros; y `Bases de datos`, de `30.0` euros. Los dos primeros comparten autor y el tercero tiene otro.
+3. Añade los tres objetos a la biblioteca mediante `anadirLibro()`.
+4. Recorre el resultado de `getLibros()` con `foreach` y muestra una tabla con título, autor y precio.
+5. Muestra el número de libros y su valor conjunto: **3 libros y 65,00 €**.
+
+En este ejercicio se añadirá cada libro una sola vez. No es necesario programar identificadores, búsqueda ni control de duplicados. Explica en un comentario por qué `anadirLibro()` no necesita crear otro objeto `Libro`.
+
+### Ejercicio 13. Una constante y un método estático
+
+Crea `Tarifa.php` con una constante pública `IVA` de valor `0.21`. Es un porcentaje fijo para este ejercicio.
+
+Añade el método público estático `calcularConIva(float $base): float`, que:
+
+- Rechace una base negativa mediante `InvalidArgumentException`.
+- Devuelva la base multiplicada por `1 + self::IVA`.
+
+La clase no necesita propiedades de instancia ni constructor: esta operación utiliza únicamente su argumento y la constante.
+
+En `index.php`, sin crear ningún objeto `Tarifa`:
+
+1. Consulta `Tarifa::IVA` y muestra el porcentaje como `21 %`.
+2. Llama a `Tarifa::calcularConIva()` con estas bases y comprueba los resultados:
+
+| Base | Importe con IVA |
+| ---: | ---: |
+| 100,00 € | 121,00 € |
+| 50,00 € | 60,50 € |
+| 0,00 € | 0,00 € |
+
+3. Prueba una base negativa y muestra el mensaje de la excepción.
+
+Responde mediante comentarios: ¿por qué no hace falta `new`?, ¿por qué no utilizamos `$this` en este método?, ¿por qué escribimos `self::IVA` sin `$`?, ¿puede reasignarse la constante durante la ejecución?
+
+### Ejercicio 14. Contar reservas creadas
+
+Crea `Reserva.php` con estos elementos:
+
+- Propiedad privada de instancia `cliente`, de tipo `string`.
+- Propiedad privada estática `totalCreadas`, de tipo `int`, inicialmente `0`.
+- Constructor que reciba el cliente, aplique `trim()` y rechace el nombre vacío mediante `InvalidArgumentException`. Después de validar y guardar el nombre, incrementará el contador estático.
+- Método de instancia `getCliente(): string`.
+- Método público estático `getTotalCreadas(): int`.
+
+Desde `index.php`, realiza las siguientes acciones **en este orden**. Antes de ejecutarlas, anota en comentarios el valor del contador que esperas después de cada paso:
+
+1. Consulta el contador sin crear reservas.
+2. Crea una reserva para `Ana` y consulta el contador.
+3. Crea otra para `Luis` y vuelve a consultarlo.
+4. Asigna la primera reserva a otra variable, sin utilizar `new`, y consulta el contador.
+5. Intenta crear una reserva con el cliente formado por espacios; captura la excepción y vuelve a consultar el contador.
+6. Crea una tercera reserva válida para `María` y consulta el contador.
+
+Muestra también los clientes de las tres reservas válidas mediante sus getters. Comprueba que cada objeto conserva su cliente, mientras que las consultas estáticas acceden al mismo contador de clase.
+
+Por último, recarga la página y responde mediante comentarios:
+
+- ¿Se vuelve a ejecutar el programa desde el principio?
+- ¿Se acumulan las reservas creadas en la petición anterior?
+- ¿El contador representa reservas construidas correctamente en la ejecución o personas atendidas desde que existe la aplicación?
+
+No añadas un método para reiniciar el contador ni un destructor: en este ejercicio contamos construcciones válidas durante una ejecución.
+
+### Ejercicio 15. Tipo examen: completa el catálogo
+
+**Tiempo orientativo: 15 minutos.** Resuelve primero sin ejecutar el código ni consultar los apuntes. Después comprueba la solución en el ordenador.
+
+Completa los **seis huecos numerados** para que el programa cumpla estos requisitos:
+
+- Cada artículo debe guardar el objeto `Categoria` recibido en su constructor.
+- El precio debe seguir siendo un dato independiente de cada artículo.
+- El contador debe ser un dato compartido de clase e incrementarse por cada artículo creado.
+- El método de cálculo debe utilizar la constante de clase `IVA`.
+- La página debe mostrar el nombre de la categoría y consultar el contador sin utilizar un artículo concreto.
+
+Sustituye cada marcador `/* HUECO n */` por el fragmento necesario. No modifiques el resto del programa. Los datos proporcionados son válidos; no se pide añadir validaciones.
+
+```php
+<?php
+declare(strict_types=1);
+
+class Categoria
+{
+    public function __construct(private string $nombre)
+    {
+    }
+
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+}
+
+class Articulo
+{
+    public const IVA = 0.21;
+
+    private /* HUECO 1 */ int $totalCreados = 0;
+    private float $precio;
+    private Categoria $categoria;
+
+    public function __construct(float $precio, Categoria $categoria)
+    {
+        $this->precio = $precio;
+        $this->categoria = /* HUECO 2 */;
+        /* HUECO 3 */++;
+    }
+
+    public function getCategoria(): Categoria
+    {
+        return $this->categoria;
+    }
+
+    public function calcularPrecioConIva(): float
+    {
+        return $this->precio * (1 + /* HUECO 4 */);
+    }
+
+    public static function getTotalCreados(): int
+    {
+        return self::$totalCreados;
+    }
+}
+
+$categoria = new Categoria('Periféricos');
+$articulo1 = new Articulo(100.0, $categoria);
+$articulo2 = new Articulo(50.0, $categoria);
+
+$articulos = [$articulo1, $articulo2];
+
+foreach ($articulos as $articulo) {
+    echo htmlspecialchars(
+        $articulo->getCategoria()->/* HUECO 5 */,
+        ENT_QUOTES,
+        'UTF-8'
+    );
+    echo ': ';
+    echo number_format($articulo->calcularPrecioConIva(), 2, ',', '.');
+    echo ' €<br>';
+}
+
+echo 'Artículos creados: ' . /* HUECO 6 */;
+```
+
+La salida debe ser:
+
+```text
+Periféricos: 121,00 €
+Periféricos: 60,50 €
+Artículos creados: 2
+```
+
+Escribe tus respuestas identificando los huecos del 1 al 6. Para comprobarlas, puedes guardar todo el programa completado en `ej15/index.php`, sin separar las clases en este ejercicio.
+
+Responde también brevemente:
+
+1. ¿Cuántos objetos se han creado en total, contando también la categoría?
+2. Si al final añadimos `$otro = $articulo1;`, ¿aumenta el contador? Justifica la respuesta.
 
 Material elaborado por **Joaquín García** para DWES de 2.º DAW del **IES Portada Alta**. Licencia **CC BY-NC-SA**.

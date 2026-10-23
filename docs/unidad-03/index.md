@@ -52,7 +52,7 @@ Seguiremos una secuencia progresiva: primero crearemos objetos sencillos; despu�
 * Getters, setters y métodos que expresan operaciones concretas.
 * Validación y promoción de propiedades del constructor.
 
-### 3. Composición y elementos de clase
+### 3. Relaciones entre objetos, constantes y miembros estáticos
 
 * Objetos que contienen o utilizan otros objetos.
 * Relación entre productos y categorías.
