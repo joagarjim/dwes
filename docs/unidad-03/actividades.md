@@ -493,4 +493,285 @@ Responde también brevemente:
 1. ¿Cuántos objetos se han creado en total, contando también la categoría?
 2. Si al final añadimos `$otro = $articulo1;`, ¿aumenta el contador? Justifica la respuesta.
 
+## Bloque 4: Herencia y polimorfismo
+
+Estos **seis ejercicios, del 16 al 21**, corresponden al [apartado 4](04-herencia-polimorfismo.md). Están pensados para practicar una vez cada idea principal y reservar tiempo para la actividad final. Tiempo orientativo total: **2–3 horas**, según el apoyo que necesites.
+
+Comienza en clase y termina en casa lo pendiente. Crea una carpeta por ejercicio dentro de `unidad-03`, guarda cada clase en su archivo y utiliza `index.php` para las pruebas. En los ejercicios 20 y 21 puedes mantener todo el código en un único archivo.
+
+Utiliza tipos, `declare(strict_types=1);` y salida HTML segura, como en los bloques anteriores. No se requieren formularios, bases de datos ni interfaces. Las clases devuelven datos; la página los muestra. No añadas funcionalidades que no se soliciten.
+
+### Ejercicio 16. Una persona que también es alumno
+
+**Objetivo:** practicar herencia, constructor de la hija y sobrescritura en un único ejemplo pequeño.
+
+Crea `Persona.php` con una propiedad privada `nombre` de tipo `string`. Su constructor recibe el nombre, aplica `trim()` y lanza `InvalidArgumentException` si queda vacío. Añade:
+
+- `getNombre(): string`, que devuelve el nombre.
+- `obtenerDescripcion(): string`, que devuelve `Persona: ` seguido del nombre.
+
+Crea `Alumno.php`. La clase `Alumno` hereda de `Persona` y añade una propiedad privada `ciclo` de tipo `string`.
+
+Su constructor recibe nombre y ciclo, limpia y valida el ciclo, llama al constructor del padre para inicializar el nombre y guarda el ciclo. No vuelvas a declarar la propiedad nombre en la hija.
+
+Añade `getCiclo(): string` y sobrescribe `obtenerDescripcion(): string` para **reutilizar la descripción del padre mediante `parent::`** y añadir el ciclo.
+
+En `index.php`, crea una persona llamada `Luis` y una alumna llamada `Ana` del ciclo `DAW`. Muestra las descripciones:
+
+```text
+Persona: Luis
+Persona: Ana / Ciclo: DAW
+```
+
+Consulta también el nombre de Ana mediante el getter heredado. Prueba una construcción con ciclo vacío y captura su excepción.
+
+Responde en comentarios: ¿por qué no accedemos directamente a `$this->nombre` desde la hija?, ¿qué inicializa `parent::__construct()`?, ¿cuántos objetos se crean al construir únicamente la alumna?
+
+### Ejercicio 17. Tarifas de aparcamiento
+
+**Objetivo:** comprender polimorfismo primero sin array y después con un recorrido.
+
+Crea estas tres clases, cada una en su archivo:
+
+| Clase | Requisitos |
+| --- | --- |
+| `Tarifa` | Clase concreta con el método público `calcularImporte(int $horas): float`. Rechaza horas menores o iguales a cero mediante `InvalidArgumentException`; en caso válido devuelve horas por `2.0`. |
+| `TarifaCoche` | Hereda de `Tarifa` sin añadir código: utiliza la implementación heredada. |
+| `TarifaMoto` | Hereda de `Tarifa` y sobrescribe `calcularImporte()` con la misma validación, pero cobrando `1.0` euro por hora. |
+
+No necesitas propiedades ni constructores: en este ejercicio las horas se reciben en cada llamada y los métodos son **de instancia**, no estáticos.
+
+En `index.php`, escribe una función `obtenerImporte(Tarifa $tarifa, int $horas): float` que devuelva el resultado de llamar a `calcularImporte()` sobre el objeto recibido. No debe comprobar la clase mediante `if`, `switch` ni `instanceof`.
+
+1. Crea un objeto `TarifaCoche` y otro `TarifaMoto`.
+2. Llama por separado a la función con cada objeto y tres horas. Debes obtener **6,00 € y 3,00 €**.
+3. Guarda esos mismos objetos en un array y repite las llamadas mediante `foreach`. Debes obtener los mismos importes, sin crear nuevas tarifas en el recorrido.
+4. Completa esta tabla, primero sobre papel y después como comentarios en el código:
+
+| Llamada | Tipo declarado del parámetro | Clase real del objeto | Clase donde se ejecuta calcularImporte() | Resultado |
+| --- | --- | --- | --- | --- |
+| Coche, 3 horas | | | | |
+| Moto, 3 horas | | | | |
+
+Explica por qué el objeto conserva su clase real al pasarlo a un parámetro `Tarifa` y por qué el `foreach` no es quien decide la fórmula.
+
+### Ejercicio 18. Figuras con una operación pendiente
+
+**Objetivo:** utilizar una clase abstracta y ejecutar sus implementaciones mediante un tipo común.
+
+Crea `Figura.php` con una clase abstracta `Figura` que declare el método público abstracto `calcularArea(): float`. No necesita propiedades ni constructor.
+
+Crea dos clases hijas concretas:
+
+| Clase | Propiedades privadas | Constructor y operación |
+| --- | --- | --- |
+| `Rectangulo` | `base` y `altura`, ambas `float`. | Recibe ambas medidas, exige que sean positivas y calcula base por altura. |
+| `Circulo` | `radio`, de tipo `float`. | Recibe el radio, exige que sea positivo y calcula pi por radio al cuadrado. |
+
+Utiliza `pi()` para obtener pi. Puedes multiplicar el radio por sí mismo. Las medidas inválidas deben provocar `InvalidArgumentException`. No necesitas getters ni un constructor vacío en `Figura`; por tanto, no hace falta llamar a `parent::__construct()` en este ejercicio.
+
+En `index.php`, define `obtenerArea(Figura $figura): float`, que llame a `calcularArea()` del objeto recibido. Crea un rectángulo de base `5.0` y altura `3.0`, y un círculo de radio `2.0`.
+
+Recórrelos mediante un array, muestra sus áreas con dos decimales y acumula los resultados numéricos antes de formatear:
+
+| Resultado | Valor mostrado |
+| --- | ---: |
+| Área del rectángulo | 15,00 |
+| Área del círculo | 12,57 |
+| Suma de áreas | 27,57 |
+
+Responde en comentarios: ¿por qué no podemos crear `new Figura()`?, ¿qué ocurriría si una hija concreta no implementase `calcularArea()`? No dejes esas instrucciones o declaraciones inválidas ejecutándose.
+
+### Ejercicio 19. Catálogo de productos físicos y digitales
+
+**Objetivo:** construir una jerarquía completa que reúna abstracción, constructor del padre, sobrescritura, polimorfismo y `final`. Utiliza el catálogo del apartado 4.9 como referencia, pero escribe y comprueba tus propios archivos.
+
+Crea `Producto.php`, `ProductoFisico.php`, `ProductoDigital.php` e `index.php` dentro de `unidad-03/ej19`. No incorpores formularios, stock, categorías ni bases de datos: en este ejercicio nos centramos en la jerarquía.
+
+#### A. Clase abstracta Producto
+
+Declara propiedades privadas `nombre` de tipo `string` y `precio` de tipo `float`. Su constructor recibe ambos datos, aplica `trim()` al nombre y rechaza mediante `InvalidArgumentException` un nombre vacío o un precio negativo.
+
+Implementa estas operaciones:
+
+| Método | Requisito |
+| --- | --- |
+| `getNombre(): string` | Devuelve el nombre. |
+| `getPrecio(): float` | Devuelve el precio. Debe ser público y **final**. |
+| `obtenerDescripcion(): string` | Devuelve `Producto: ` seguido del nombre. |
+| `calcularTotal(): float` | Devuelve el precio más el envío obtenido mediante `$this->calcularGastosEnvio()`. |
+| `calcularGastosEnvio(): float` | Decláralo público y **abstracto**, sin cuerpo. |
+
+#### B. Clase ProductoFisico
+
+Hereda de `Producto` y añade una propiedad privada `peso` de tipo `float`.
+
+- El constructor recibe nombre, precio y peso. Exige un peso positivo, llama al constructor del padre y guarda el peso.
+- Añade `getPeso(): float`.
+- Sobrescribe `obtenerDescripcion()` para reutilizar la descripción del padre y añadir ` / Peso: `, el peso y ` kg`.
+- Implementa el envío: **2 euros por kilogramo**.
+
+#### C. Clase ProductoDigital
+
+Declárala **final** y haz que herede de `Producto`.
+
+- No añadas constructor propio: utiliza el heredado.
+- Sobrescribe la descripción para reutilizar la del padre y añadir ` / Descarga digital`.
+- Implementa el envío devolviendo `0.0`.
+
+#### D. Página de prueba y polimorfismo
+
+Define una función `obtenerTotal(Producto $producto): float` que devuelva el resultado de `calcularTotal()` del objeto recibido. No utilices comprobaciones de clase para elegir fórmulas.
+
+Crea estos tres productos y guárdalos en un array:
+
+| Producto | Tipo | Precio | Peso |
+| --- | --- | ---: | ---: |
+| Teclado | Físico | 25,00 € | 0.5 kg |
+| Curso PHP | Digital | 20,00 € | No corresponde. |
+| Monitor | Físico | 180,00 € | 4 kg |
+
+Recorre el array y muestra una tabla HTML sencilla con descripción, precio, envío y total. Acumula el resultado de `obtenerTotal()` para obtener el valor conjunto.
+
+| Producto | Envío esperado | Total esperado |
+| --- | ---: | ---: |
+| Teclado | 1,00 € | 26,00 € |
+| Curso PHP | 0,00 € | 20,00 € |
+| Monitor | 8,00 € | 188,00 € |
+
+La suma será **234,00 €**. El cálculo corresponde a una unidad de cada producto con su envío individual; no se calcula un paquete conjunto.
+
+Prueba también un producto físico de peso cero y un producto digital de precio negativo. Captura cada excepción por separado y muestra su mensaje desde la página.
+
+#### E. Explicar las decisiones
+
+Responde mediante comentarios, sin dejar declaraciones inválidas ejecutándose:
+
+1. ¿Por qué no puedes crear directamente un objeto `Producto`?
+2. ¿Qué obliga a implementar el método abstracto?
+3. ¿Qué impide `final` en `getPrecio()`? ¿Pueden las hijas utilizarlo?
+4. ¿Qué impide `final` en `ProductoDigital`?
+5. Cuando `calcularTotal()` se ejecuta sobre el teclado, ¿qué objeto representa `$this` y qué versión del cálculo de envío se utiliza?
+
+Anota el recorrido completo del teclado desde `obtenerTotal()` hasta el resultado `26.0`. No basta con copiar el código: debes poder explicar qué método se ejecuta en cada paso.
+
+### Ejercicio 20. Reparar una jerarquía pequeña
+
+**Tiempo orientativo: 10–15 minutos.** El siguiente programa no funciona correctamente. Localiza y corrige sus errores manteniendo `Aviso` abstracta y el método `getTexto()` final. No cambies la instrucción que crea el aviso.
+
+```php
+<?php
+declare(strict_types=1);
+
+abstract class Aviso
+{
+    private string $texto;
+
+    public function __construct(string $texto)
+    {
+        $this->texto = $texto;
+    }
+
+    final public function getTexto(): string
+    {
+        return $this->texto;
+    }
+
+    abstract public function obtenerMensaje(): string;
+}
+
+class AvisoUrgente extends Aviso
+{
+    public function __construct(string $texto)
+    {
+    }
+
+    public function getTexto(): string
+    {
+        return 'Texto sustituido';
+    }
+
+}
+
+$aviso = new AvisoUrgente('Revisar entrega');
+echo htmlspecialchars($aviso->obtenerMensaje(), ENT_QUOTES, 'UTF-8');
+```
+
+El aviso urgente debe permitir consultar un mensaje formado por `URGENTE: ` seguido del texto guardado en el objeto. Tras corregir el programa debe mostrarse:
+
+```text
+URGENTE: Revisar entrega
+```
+
+Explica en comentarios cada corrección. Para este ejercicio puedes guardar todo el programa en `ej20/index.php`; los datos son válidos y no se pide añadir validaciones.
+
+### Ejercicio 21. Tipo examen: completa y sigue la jerarquía
+
+**Tiempo orientativo: 15–20 minutos.** Resuelve primero sin apuntes ni ordenador. Completa los **cinco huecos**, predice las dos líneas de salida y después comprueba el programa.
+
+El ticket general cuesta `5.0` euros. Un ticket reducido cuesta la mitad. La hija debe utilizar el constructor del padre y su cálculo, sin repetir el precio base como un número literal.
+
+```php
+<?php
+declare(strict_types=1);
+
+class Ticket
+{
+    private string $nombre;
+    protected float $precioBase = 5.0;
+
+    public function __construct(string $nombre)
+    {
+        $this->nombre = $nombre;
+    }
+
+    final public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    public function calcularPrecio(): float
+    {
+        return $this->precioBase;
+    }
+}
+
+final class TicketReducido /* HUECO 1 */ Ticket
+{
+    public function __construct(string $nombre)
+    {
+        /* HUECO 2 */($nombre);
+    }
+
+    public function calcularPrecio(): float
+    {
+        return /* HUECO 3 */() / 2;
+    }
+}
+
+function mostrarPrecio(/* HUECO 4 */ $ticket): string
+{
+    return $ticket->getNombre() . ': '
+        . number_format($ticket->calcularPrecio(), 2, ',', '.') . ' €';
+}
+
+$normal = new Ticket('General');
+$reducido = new TicketReducido('Reducido');
+
+echo htmlspecialchars(mostrarPrecio($normal), ENT_QUOTES, 'UTF-8');
+echo '<br>';
+echo htmlspecialchars(mostrarPrecio(/* HUECO 5 */), ENT_QUOTES, 'UTF-8');
+```
+
+No se requiere añadir validación: los argumentos proporcionados son válidos. El hueco 4 debe expresar el tipo común que admite los dos objetos.
+
+Además de completar los huecos y escribir la salida, responde:
+
+1. ¿Puede `TicketReducido` acceder directamente a `$this->precioBase`? ¿Y a `$this->nombre`? Justifica según su visibilidad.
+2. ¿Se puede crear una clase hija de `TicketReducido`? ¿Por qué?
+3. ¿Puede una hija de `Ticket` sobrescribir `getNombre()`? ¿Y utilizarlo sin sobrescribirlo?
+4. Al llamar a `mostrarPrecio()` con el ticket reducido, ¿qué implementación de `calcularPrecio()` se selecciona? ¿Qué hace después la llamada al padre dentro de ese método?
+
+Guarda la comprobación en `ej21/index.php`. No elimines los modificadores `final` ni cambies la visibilidad para resolver el ejercicio.
+
 Material elaborado por **Joaquín García** para DWES de 2.º DAW del **IES Portada Alta**. Licencia **CC BY-NC-SA**.

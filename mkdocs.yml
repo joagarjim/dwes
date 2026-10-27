@@ -48,6 +48,7 @@ nav:
       - 1. Clases y objetos en PHP: unidad-03/01-clases-objetos.md
       - 2. Constructor y encapsulación: unidad-03/02-constructor-encapsulacion.md
       - 3. Relaciones entre objetos, constantes y miembros estáticos: unidad-03/03-composicion-elementos-clase.md
+      - 4. Herencia y polimorfismo: unidad-03/04-herencia-polimorfismo.md
 markdown_extensions:
   - admonition
   - attr_list
