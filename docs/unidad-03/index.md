@@ -26,8 +26,8 @@ Al terminar la unidad serás capaz de:
 * Relacionar objetos mediante composición y trabajar con arrays de objetos.
 * Distinguir los datos y las operaciones de cada instancia de los elementos compartidos de la clase.
 * Reutilizar y especializar comportamiento mediante herencia, sobrescritura y polimorfismo.
-* Comprender la finalidad de las clases abstractas y las interfaces y utilizar contratos sencillos.
-* Organizar las clases en archivos y reconocer la función de los espacios de nombres y la autocarga.
+* Comprender la finalidad de las clases abstractas y las interfaces y decidir cuándo utilizar cada una o combinarlas.
+* Organizar las clases e interfaces en archivos y cargarlos mediante `require_once` y `__DIR__`.
 * Comunicar operaciones inválidas mediante excepciones, comprobar el comportamiento de las clases y documentar su uso.
 * Separar las operaciones de las clases del código que presenta los resultados en una página web.
 
@@ -42,7 +42,7 @@ Seguiremos una secuencia progresiva: primero crearemos objetos sencillos; despu�
 * Creación con `new`, acceso con `->` y significado de `$this`.
 * Estado de los objetos, valores de retorno y organización inicial en archivos.
 
-[Comenzar el apartado 1](01-clases-objetos.md){ .md-button .md-button--primary }
+[Comenzar el apartado 1](01-clases-objetos.md)
 
 ### 2. Constructor y encapsulación
 
@@ -52,12 +52,16 @@ Seguiremos una secuencia progresiva: primero crearemos objetos sencillos; despu�
 * Getters, setters y métodos que expresan operaciones concretas.
 * Validación y promoción de propiedades del constructor.
 
+[Consultar el apartado 2](02-constructor-encapsulacion.md)
+
 ### 3. Relaciones entre objetos, constantes y miembros estáticos
 
 * Objetos que contienen o utilizan otros objetos.
 * Relación entre productos y categorías.
 * Arrays de objetos.
 * Constantes y elementos estáticos: diferencia entre instancia y clase.
+
+[Consultar el apartado 3](03-composicion-elementos-clase.md)
 
 ### 4. Herencia y polimorfismo
 
@@ -67,13 +71,16 @@ Seguiremos una secuencia progresiva: primero crearemos objetos sencillos; despu�
 * Tratamiento de objetos de distintas clases mediante un tipo común.
 * Finalidad de las clases abstractas y del modificador `final`.
 
-### 5. Interfaces y organización del código
+[Consultar el apartado 4](04-herencia-polimorfismo.md)
 
-* Contratos con `interface` e `implements`.
-* Diferencias entre una interfaz y una clase abstracta.
-* Una clase por archivo y carga con `require_once`.
-* Espacios de nombres con `namespace` y uso de nombres con `use`.
-* Introducción a la finalidad de la autocarga.
+### 5. Interfaces en PHP
+
+* Operaciones comunes con `interface` e `implements`.
+* Polimorfismo mediante interfaces.
+* Diferencias y combinación con clases abstractas.
+* Ejemplo completo de empleados y clientes.
+
+[Consultar el apartado 5](05-interfaces.md)
 
 ### 6. Excepciones, pruebas y documentación
 
@@ -82,11 +89,15 @@ Seguiremos una secuencia progresiva: primero crearemos objetos sencillos; despu�
 * Comprobación de casos normales, valores límite y errores.
 * Documentación de las clases, sus métodos y sus responsabilidades.
 
+[Consultar el apartado 6](06-excepciones-pruebas-documentacion.md)
+
 ## Cómo vamos a trabajar
 
-En clase estudiaremos los conceptos con ejemplos pequeños y comentados. Analizaremos qué hace el código, qué resultados produce y cómo cambia el estado de los objetos. Después pondremos en común soluciones de los ejercicios, resolveremos dudas y revisaremos errores frecuentes.
+Al comenzar cada sesión revisaremos las soluciones de los ejercicios del bloque anterior, resolveremos dudas y analizaremos errores frecuentes. Después estudiaremos el siguiente bloque con ejemplos pequeños y comentados: qué hace el código, qué resultados produce y cómo cambia el estado de los objetos.
 
-Los **ejercicios se trabajarán en casa**, organizados en bloques que siguen los apartados de la unidad. Algunos serán independientes y otros ampliarán una solución anterior para incorporar un concepto nuevo. Se entregarán en Moodle según las indicaciones de clase.
+Comenzaremos los **ejercicios en clase y completaremos en casa lo pendiente**, organizados en bloques que siguen los apartados de la unidad. Algunos serán independientes y otros ampliarán una solución anterior para incorporar un concepto nuevo. Se entregarán en Moodle según las indicaciones de clase.
+
+Los apartados 1 a 5 cuentan con **24 ejercicios en total**. El apartado 6 se practicará dentro de la actividad final, aplicando las excepciones, las pruebas y la documentación al proyecto completo.
 
 Los apuntes servirán como manual de consulta: incluirán explicaciones de la sintaxis, ejemplos, resultados esperados y preguntas para comprobar la comprensión. Al programar, será importante poder explicar por qué utilizamos una clase, qué responsabilidad tiene y cómo hemos comprobado que funciona.
 
@@ -95,13 +106,17 @@ Los apuntes servirán como manual de consulta: incluirán explicaciones de la si
 
 ## Actividad final
 
-Integraremos lo aprendido en una **pequeña aplicación de gestión de un catálogo de productos en memoria**, sin base de datos. Organizaremos la información mediante clases y objetos y mostraremos sus resultados en una página web.
+Desarrollaremos **«Tienda informática: catálogo orientado a objetos»**, una aplicación con productos físicos y digitales que pertenecen a categorías y se reúnen en un catálogo. Calcularemos precios con envío y realizaremos reservas y reposiciones de existencias. Los datos se definirán en PHP y se conservarán durante cada petición, sin base de datos.
 
-La actividad permitirá aplicar encapsulación, composición, herencia e interfaces, además de comprobar y documentar las operaciones. Su desarrollo se realizará principalmente en casa y se acompañará de una comprobación individual del aprendizaje. El enunciado detallado se publicará durante la unidad.
+La actividad integra encapsulación, relaciones entre objetos, herencia, polimorfismo, interfaces, constantes y miembros estáticos. También tendremos que rechazar operaciones inválidas mediante excepciones, comprobar que los objetos conservan un estado correcto y documentar el código.
+
+Será **individual**, con una dedicación orientativa de **unas 4 horas**, principalmente en casa después de presentar el enunciado en clase. Se entregará el proyecto en ZIP con su README y un PDF con tres capturas. El enunciado incluye los archivos, métodos, resultados esperados, pruebas y una rúbrica sobre 10 puntos. La fecha de entrega se indicará en Moodle.
+
+[Consultar la actividad final](07-actividad-final.md){ .md-button .md-button--primary }
 
 ## Actividades de la unidad
 
-Consulta la [relación de actividades](actividades.md) para acceder a los enunciados por bloques y a las indicaciones de trabajo. Este documento se irá completando a medida que avancemos en los apartados.
+Consulta la [relación de actividades](actividades.md) para acceder a los 24 ejercicios organizados por bloques. La [actividad final](07-actividad-final.md) tiene su propio enunciado y reúne los contenidos de los seis apartados.
 
 ## Autoría y licencia
 

@@ -49,6 +49,9 @@ nav:
       - 2. Constructor y encapsulación: unidad-03/02-constructor-encapsulacion.md
       - 3. Relaciones entre objetos, constantes y miembros estáticos: unidad-03/03-composicion-elementos-clase.md
       - 4. Herencia y polimorfismo: unidad-03/04-herencia-polimorfismo.md
+      - 5. Interfaces en PHP: unidad-03/05-interfaces.md
+      - 6. Excepciones, pruebas y documentación: unidad-03/06-excepciones-pruebas-documentacion.md
+      - 7. Actividad final: unidad-03/07-actividad-final.md
 markdown_extensions:
   - admonition
   - attr_list

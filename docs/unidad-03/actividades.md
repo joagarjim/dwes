@@ -774,4 +774,144 @@ Además de completar los huecos y escribir la salida, responde:
 
 Guarda la comprobación en `ej21/index.php`. No elimines los modificadores `final` ni cambies la visibilidad para resolver el ejercicio.
 
+## Bloque 5: Interfaces en PHP
+
+Estos **tres ejercicios, del 22 al 24**, corresponden al [apartado 5](05-interfaces.md). Tiempo orientativo total: **60–90 minutos**. Empieza en clase y termina en casa lo pendiente.
+
+Crea las carpetas `unidad-03/ej22`, `ej23` y `ej24`. Guarda cada interfaz y clase en su archivo y utiliza `index.php` para las pruebas, salvo en el ejercicio 24, que puede resolverse en un único archivo. Utiliza tipos, `declare(strict_types=1);` y salida HTML segura. No se requieren formularios, bases de datos, espacios de nombres ni autocarga.
+
+### Ejercicio 22. Distintas formas de avisar
+
+Crea la interfaz `Notificador` con el método público `prepararAviso(string $mensaje): string`.
+
+Implementa dos clases sin propiedades ni constructor:
+
+| Clase | Interfaz que cumple | Resultado de prepararAviso() |
+| --- | --- | --- |
+| `NotificadorEmail` | `Notificador` | `EMAIL: ` seguido del mensaje. |
+| `NotificadorSms` | `Notificador` | `SMS: ` seguido del mensaje. |
+
+Estas clases **solo preparan texto**: no envían correos ni mensajes reales. No necesitas validar destinatarios porque no se reciben direcciones ni teléfonos.
+
+En `index.php`, define `crearAviso(Notificador $notificador, string $mensaje): string`, que devuelva el resultado de la operación del objeto recibido.
+
+1. Crea una instancia de cada clase y llama a la función con el mensaje `La entrega termina mañana`.
+2. Comprueba estas dos líneas:
+
+```text
+EMAIL: La entrega termina mañana
+SMS: La entrega termina mañana
+```
+
+3. Guarda los mismos objetos en un array y repite las llamadas mediante `foreach`.
+4. Responde en comentarios: ¿por qué ambas clases pueden pasarse a la misma función?, ¿la interfaz aporta el cuerpo del método?, ¿bastaría con escribir el método en una clase sin declarar que cumple la interfaz para que la función la admitiese?
+
+### Ejercicio 23. Recursos que se prestan y se describen
+
+**Objetivo:** distinguir lo que aporta una clase abstracta de lo que exige una interfaz. Es un ejercicio pequeño: dos tipos de recurso, un aviso y una operación común.
+
+Crea la interfaz `Describible` con el método público `obtenerDescripcion(): string`.
+
+Crea una clase abstracta `Recurso` que implemente `Describible`:
+
+- Propiedad privada `titulo` de tipo `string`.
+- Constructor que reciba el título, aplique `trim()` y rechace el título vacío mediante `InvalidArgumentException`.
+- `getTitulo(): string`, que devuelve el título.
+- `obtenerDescripcion(): string`, implementado para devolver `Recurso: ` seguido del título.
+- Método público abstracto `getDiasPrestamo(): int`.
+
+Crea dos hijas concretas sin constructor propio:
+
+| Clase | Operación que implementa |
+| --- | --- |
+| `Libro` | `getDiasPrestamo()` devuelve `14`. |
+| `Revista` | `getDiasPrestamo()` devuelve `7`. |
+
+Ambas heredan la descripción de `Recurso`: no necesitan repetir `implements` ni copiar ese método.
+
+Crea también `Aviso`, que implemente `Describible` **sin heredar de Recurso**. Tendrá un texto privado de tipo `string`, inicializado por su constructor. Rechaza el texto vacío después de aplicar `trim()`. Su descripción devolverá `Aviso: ` seguido del texto. Un aviso no tiene días de préstamo.
+
+En `index.php`, define `describir(Describible $elemento): string`, que solicite su descripción. Crea:
+
+- Un libro titulado `Aprender PHP`.
+- Una revista titulada `Tecnología actual`.
+- Un aviso con el texto `Biblioteca cerrada el lunes`.
+
+Muestra los tres mediante la misma función y un recorrido. Después muestra los días de préstamo únicamente del libro y de la revista:
+
+```text
+Recurso: Aprender PHP
+Recurso: Tecnología actual
+Aviso: Biblioteca cerrada el lunes
+Préstamo del libro: 14 días
+Préstamo de la revista: 7 días
+```
+
+Responde mediante comentarios:
+
+1. ¿Qué datos y código comparten Libro y Revista gracias a Recurso?
+2. ¿Qué operación común permite exigir Describible a los tres objetos?
+3. ¿Por qué no hacemos que Aviso herede de Recurso?
+4. ¿Podríamos llamar a getDiasPrestamo() sobre cualquier objeto recibido como Describible? Justifica con el aviso.
+
+No añadas búsqueda, altas, devoluciones ni control del préstamo: aquí solo consultamos descripciones y plazos.
+
+### Ejercicio 24. Tipo examen: completa y elige el tipo
+
+**Tiempo orientativo: 10–15 minutos.** Resuelve primero sin apuntes ni ordenador. Completa los **cuatro huecos** y escribe las dos líneas de salida.
+
+```php
+<?php
+declare(strict_types=1);
+
+/* HUECO 1 */ Identificable
+{
+    public function getCodigo(): string;
+}
+
+class Socio /* HUECO 2 */ Identificable
+{
+    public function __construct(private string $codigo)
+    {
+    }
+
+    public function getCodigo(): string
+    {
+        return 'SOC-' . $this->codigo;
+    }
+}
+
+class Pedido implements Identificable
+{
+    public function __construct(private string $codigo)
+    {
+    }
+
+    public function getCodigo(): string
+    {
+        return 'PED-' . $this->codigo;
+    }
+}
+
+function consultarCodigo(/* HUECO 3 */ $elemento): string
+{
+    return $elemento->/* HUECO 4 */;
+}
+
+$socio = new Socio('10');
+$pedido = new Pedido('25');
+
+echo htmlspecialchars(consultarCodigo($socio), ENT_QUOTES, 'UTF-8');
+echo '<br>';
+echo htmlspecialchars(consultarCodigo($pedido), ENT_QUOTES, 'UTF-8');
+```
+
+El parámetro debe admitir los dos objetos mediante la interfaz común. Mantén el resto del programa; no se pide añadir validaciones. Puedes comprobarlo en `ej24/index.php`.
+
+Responde también:
+
+1. ¿Sería válido `new Identificable()`? Justifica.
+2. Si otra clase Cliente declara getCodigo() pero no implementa la interfaz ni la hereda, ¿puede pasarse a consultarCodigo() tal como está definida?
+3. Si varias clases necesitan compartir propiedades y un constructor ya implementado, ¿qué herramienta de este bloque y del anterior permite aportar esa base común?
+
 Material elaborado por **Joaquín García** para DWES de 2.º DAW del **IES Portada Alta**. Licencia **CC BY-NC-SA**.
