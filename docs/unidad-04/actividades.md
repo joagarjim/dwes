@@ -107,9 +107,51 @@ La página de resultado mostrará «Fin de la demostración de reserva», un tex
 
 **Explica en un comentario:** por qué los datos pueden volver a aparecer en el formulario con errores y por qué no están disponibles automáticamente en `resultado.php`.
 
+## Bloque 3. Subida de archivos
+
+### Ejercicio 5. Entrega de una memoria en PDF
+
+**Archivo:** `ej05/entrega.php`.
+
+Crea un formulario que permita entregar una memoria de prácticas con estos campos:
+
+| Campo (`name`) | Control | Reglas en PHP |
+| --- | --- | --- |
+| Título de la práctica (`titulo`) | Texto | Obligatorio; entre 5 y 80 caracteres después de quitar espacios de los extremos. |
+| Memoria (`memoria`) | Archivo | Un único PDF, no vacío y de hasta **3 MiB** (3 × 1024 × 1024 bytes). |
+
+El formulario utilizará POST y `multipart/form-data`. En la primera visita se mostrará vacío y sin errores. Puedes orientar el selector con `accept="application/pdf"`, pero deberás comprobar el archivo en PHP.
+
+**La aplicación debe:**
+
+1. Recoger el título mediante `$_POST` y el archivo mediante `$_FILES`, comprobando la forma esperada de cada dato.
+2. Comprobar los errores de recepción, el tamaño y el tipo del contenido con **Fileinfo**. El tipo admitido será `application/pdf`; no basta con comprobar la extensión o el tipo enviado por el navegador.
+3. **Guardar el archivo solo si todos los datos son válidos**, incluido el título. Utiliza `move_uploaded_file`, un nombre generado por la aplicación y la extensión `.pdf`. No utilices el nombre original como destino.
+4. Guardarlo en `/var/www/almacen-ud04`, preparada fuera de la raíz pública y con los permisos indicados en los apuntes.
+5. Si hay errores, mostrarlos junto al campo correspondiente y conservar el título. El archivo deberá seleccionarse otra vez.
+6. Si todo es correcto, mostrar **«Memoria recibida»**, el título y el nombre con el que se ha guardado, en la misma página. Escapa los datos al mostrarlos en HTML.
+
+No se utilizarán sesiones ni base de datos. En este ejercicio sí se conserva el archivo recibido. No es necesario mostrar ni descargar el PDF desde la página.
+
+**Preparación:** habilita Fileinfo y utiliza `upload_max_filesize = 4M` y `post_max_size = 5M` en el PHP del contenedor. De este modo podrás probar con un PDF de más de 3 MiB y menos de 4 MiB el rechazo realizado por tu propio código. Para contar los caracteres del título puedes utilizar `mb_strlen`, como en el bloque anterior.
+
+**Comprueba:**
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| Primera visita. | Formulario vacío, sin mensajes de error. |
+| Título de menos de 5 caracteres y PDF válido. | Error de título; el archivo no se guarda. |
+| Título válido y ningún archivo. | Error de memoria; el título se conserva. |
+| Título y PDF válidos. | Se guarda y se muestra el nombre generado. |
+| Archivo de texto u otro formato renombrado a `.pdf`. | Se rechaza por tipo de contenido. |
+| Archivo vacío o PDF de más de 3 MiB. | Se rechaza por tamaño si llega a recibirse; si PHP impide su recepción, se informa del error de subida. |
+| Dos PDF con el mismo nombre original. | Se guardan con nombres nuevos diferentes. |
+
+Utiliza el terminal del contenedor para comprobar qué archivos se han guardado. Verifica especialmente que **un título incorrecto no provoca un guardado parcial**. Puedes desactivar temporalmente las comprobaciones HTML para probar las de PHP.
+
 ## Entrega y comprobación
 
-Entrega las cuatro carpetas con el código comentado de forma breve. Comprueba cada regla y evita avisos de claves inexistentes o errores al recibir arrays inesperados. La forma concreta de entrega y el plazo se indicarán en Moodle.
+Entrega las carpetas de los ejercicios solicitados con el código comentado de forma breve. Comprueba cada regla y evita avisos de claves inexistentes o errores al recibir arrays inesperados. La forma concreta de entrega y el plazo se indicarán en Moodle.
 
 **Relación con la programación:** RA3.e y RA3.f (formularios y recuperación de información); RA4.f (uso del entorno para prueba y depuración).
 
