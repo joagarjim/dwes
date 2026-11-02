@@ -118,6 +118,25 @@ Será **individual**, con una dedicación orientativa de **unas 4 horas**, princ
 
 Consulta la [relación de actividades](actividades.md) para acceder a los 24 ejercicios organizados por bloques. La [actividad final](07-actividad-final.md) tiene su propio enunciado y reúne los contenidos de los seis apartados.
 
+## Relación con los resultados de aprendizaje y criterios de evaluación
+
+Esta unidad contribuye al siguiente resultado de aprendizaje:
+
+**RA5.** Desarrolla aplicaciones web identificando y aplicando mecanismos para separar el código de presentación de la lógica de negocio.
+
+En esta unidad trabajaremos los criterios relacionados con la programación orientada a objetos, las pruebas y la documentación. Los demás aspectos del resultado de aprendizaje se desarrollarán en unidades posteriores.
+
+### Criterios de evaluación
+
+| Código | Criterio de evaluación |
+| --- | --- |
+| RA5.g | Se han aplicado los principios y patrones de diseño de la programación orientada a objetos. |
+| RA5.h | Se ha probado y documentado el código. |
+
+Trabajaremos estos criterios mediante la creación y organización de clases, la encapsulación, la composición, la herencia, el polimorfismo y las interfaces. Comprobaremos el comportamiento del código con casos normales, valores límite y operaciones inválidas, y documentaremos su utilización.
+
+Los enunciados de las actividades y pruebas concretarán los criterios de evaluación asociados. La separación entre la lógica de negocio y la presentación se seguirá desarrollando en las unidades posteriores.
+
 ## Autoría y licencia
 
 Material elaborado por **Joaquín García** para el módulo de **Desarrollo Web en Entorno Servidor** de 2.º DAW del **IES Portada Alta**.

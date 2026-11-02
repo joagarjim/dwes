@@ -90,6 +90,28 @@ El siguiente esquema resume el camino que seguiremos desde el funcionamiento bá
     >
 </div>
 
+## Relación con los resultados de aprendizaje y criterios de evaluación
+
+Esta unidad trabaja el siguiente resultado de aprendizaje:
+
+**RA1.** Selecciona las arquitecturas y tecnologías de programación web en entorno servidor, analizando sus capacidades y características propias.
+
+### Criterios de evaluación
+
+| Código | Criterio de evaluación |
+| --- | --- |
+| RA1.a | Se han caracterizado y diferenciado los modelos de ejecución de código en el servidor y en el cliente web. |
+| RA1.b | Se han reconocido las ventajas que proporciona la generación dinámica de páginas. |
+| RA1.c | Se han identificado los mecanismos de ejecución de código en los servidores web. |
+| RA1.d | Se han reconocido las funcionalidades que aportan los servidores de aplicaciones y su integración con los servidores web. |
+| RA1.e | Se han identificado y caracterizado los principales lenguajes y tecnologías relacionados con la programación web en entorno servidor. |
+| RA1.f | Se han verificado los mecanismos de integración de los lenguajes de marcas con los lenguajes de programación en entorno servidor. |
+| RA1.g | Se han reconocido y evaluado las herramientas y frameworks de programación en entorno servidor. |
+
+Trabajaremos estos criterios mediante el análisis de arquitecturas y tecnologías web, la preparación del entorno Docker y la comprobación de cómo el servidor ejecuta PHP y genera la respuesta que recibe el navegador.
+
+Los enunciados de las actividades y pruebas concretarán los criterios de evaluación asociados.
+
 ## Autoría y licencia
 
 Material elaborado por **Joaquín García** para el módulo de **Desarrollo Web en Entorno Servidor** de 2.º DAW del **IES Portada Alta**.

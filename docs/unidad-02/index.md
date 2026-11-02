@@ -85,6 +85,43 @@ formulario y cálculo de presupuestos.
 
 Los ejercicios están organizados en bloques que siguen los contenidos. Consulta la [relación de actividades](actividades.md) para ver los enunciados y las indicaciones de entrega. Al terminar los apartados prepararemos una práctica final de integración.
 
+## Relación con los resultados de aprendizaje y criterios de evaluación
+
+Esta unidad trabaja los siguientes resultados de aprendizaje:
+
+**RA2.** Escribe sentencias ejecutables por un servidor web reconociendo y aplicando procedimientos de integración del código en lenguajes de marcas.
+
+**RA3.** Escribe bloques de sentencias embebidos en lenguajes de marcas, seleccionando y utilizando las estructuras de programación.
+
+### Criterios de evaluación del RA2
+
+| Código | Criterio de evaluación |
+| --- | --- |
+| RA2.a | Se han reconocido los mecanismos de generación de páginas web a partir de lenguajes de marcas con código embebido. |
+| RA2.b | Se han identificado las principales tecnologías asociadas. |
+| RA2.c | Se han utilizado etiquetas para la inclusión de código en el lenguaje de marcas. |
+| RA2.d | Se ha reconocido la sintaxis del lenguaje de programación que se ha de utilizar. |
+| RA2.e | Se han escrito sentencias simples y se han comprobado sus efectos en el documento resultante. |
+| RA2.f | Se han utilizado directivas para modificar el comportamiento predeterminado. |
+| RA2.g | Se han utilizado los distintos tipos de variables y operadores disponibles en el lenguaje. |
+| RA2.h | Se han identificado los ámbitos de utilización de las variables. |
+
+### Criterios de evaluación del RA3
+
+| Código | Criterio de evaluación |
+| --- | --- |
+| RA3.a | Se han utilizado mecanismos de decisión en la creación de bloques de sentencias. |
+| RA3.b | Se han utilizado bucles y se ha verificado su funcionamiento. |
+| RA3.c | Se han utilizado matrices (arrays) para almacenar y recuperar conjuntos de datos. |
+| RA3.d | Se han creado y utilizado funciones. |
+| RA3.e | Se han utilizado formularios web para interactuar con el usuario del navegador web. |
+| RA3.f | Se han empleado métodos para recuperar la información introducida en el formulario. |
+| RA3.g | Se han añadido comentarios al código. |
+
+Trabajaremos estos criterios mediante ejemplos y ejercicios de PHP, formularios y una actividad final que integra variables, estructuras de control, arrays y funciones.
+
+Los enunciados de las actividades y pruebas concretarán los criterios de evaluación asociados. Los formularios y el procesamiento de información del cliente se retomarán y ampliarán en la unidad 4.
+
 ## Autoría y licencia
 
 Material elaborado por **Joaquín García** para el módulo de **Desarrollo Web en Entorno Servidor** de 2.º DAW del **IES Portada Alta**.
