@@ -149,6 +149,134 @@ No se utilizarán sesiones ni base de datos. En este ejercicio sí se conserva e
 
 Utiliza el terminal del contenedor para comprobar qué archivos se han guardado. Verifica especialmente que **un título incorrecto no provoca un guardado parcial**. Puedes desactivar temporalmente las comprobaciones HTML para probar las de PHP.
 
+## Bloque 4. Cookies
+
+### Ejercicio 6. Una web que recuerda cómo prefieres leer
+
+**Archivo:** `ej06/lectura.php`.
+
+Una web de noticias quiere que sus visitantes puedan elegir un tamaño de texto cómodo para leer sus artículos. Crea una página que **recuerde esa elección durante 30 días**, aunque el visitante cierre la pestaña y vuelva más tarde.
+
+#### 1. Prepara la página
+
+La página debe mostrar:
+
+* Un título y un pequeño artículo con, al menos, tres párrafos. Puedes inventar una noticia relacionada con la informática.
+* El tamaño de lectura utilizado actualmente: **Normal**, **Grande** o **Muy grande**.
+* Un formulario para elegir el tamaño.
+* Un botón independiente para **Restablecer preferencia**.
+
+Utiliza este catálogo de opciones:
+
+| Valor que procesa PHP | Texto mostrado | Tamaño del artículo |
+| --- | --- | --- |
+| `normal` | Normal | `1rem` |
+| `grande` | Grande | `1.25rem` |
+| `muy-grande` | Muy grande | `1.5rem` |
+
+**En la primera visita, si no existe ninguna preferencia válida, se utilizará Normal.** Entrar en la página no debe crear automáticamente la cookie.
+
+#### 2. Permite guardar la preferencia
+
+El formulario debe enviarse mediante **POST** e incluir un desplegable llamado `tamano`, con las tres opciones anteriores, y un botón **Guardar preferencia**.
+
+Al recibir el formulario:
+
+1. Comprueba que el tamaño recibido sea una cadena y que pertenezca al catálogo permitido.
+2. Si es válido, solicita el almacenamiento de una cookie llamada **`ud04_tamano_lectura`**, con el valor elegido.
+3. Configura la cookie con estas opciones:
+
+| Opción | Configuración |
+| --- | --- |
+| Caducidad | 30 días desde que se guarda la preferencia. |
+| Ruta | `/` |
+| `secure` | `false` para nuestro entorno HTTP local. |
+| `httponly` | `true` |
+| `samesite` | `Lax` |
+
+4. Si se ha podido preparar la cookie, realiza una **redirección 303 a `lectura.php`** y termina la ejecución.
+
+Si el dato recibido no es válido, muestra un mensaje de error y **no modifiques la cookie**.
+
+#### 3. Recupera la preferencia y aplícala
+
+En cada petición, consulta la cookie y valida su contenido antes de utilizarlo.
+
+* Si contiene una opción permitida, aplica ese tamaño.
+* Si no existe o contiene un valor incorrecto, utiliza **Normal**.
+* El desplegable debe mostrar seleccionada la opción que se está utilizando.
+* El texto que indica el tamaño actual debe coincidir con el tamaño aplicado al artículo.
+
+**El cambio debe apreciarse de verdad en los párrafos del artículo.** Para facilitar la parte visual, puedes utilizar estas clases:
+
+```css
+.lectura-normal {
+    font-size: 1rem;
+}
+
+.lectura-grande {
+    font-size: 1.25rem;
+}
+
+.lectura-muy-grande {
+    font-size: 1.5rem;
+}
+
+.articulo {
+    line-height: 1.7;
+    max-width: 65ch;
+}
+```
+
+PHP decidirá qué clase permitida añadir al artículo. **La clase debe proceder de tu catálogo validado**, evitando introducir directamente en el HTML cualquier valor recibido del navegador. Escapa los datos al insertarlos en HTML.
+
+No necesitas JavaScript: el tamaño se aplicará en el HTML generado después de la redirección.
+
+#### 4. Permite restablecer la preferencia
+
+El botón **Restablecer preferencia** debe utilizar un formulario POST independiente.
+
+Al pulsarlo:
+
+1. Solicita el borrado de la cookie mediante una fecha de caducidad pasada y las mismas opciones de ámbito utilizadas al crearla.
+2. Si se ha podido preparar el borrado, redirige con estado **303** a `lectura.php` y termina la ejecución.
+3. La página volverá a mostrar el artículo con tamaño **Normal**.
+
+Para distinguir las operaciones, utiliza los valores **`guardar`** y **`restablecer`** en un campo llamado `accion`. Si llega una acción desconocida, muestra un error sin modificar la cookie.
+
+#### 5. Comprueba el funcionamiento en Chrome
+
+Realiza estas pruebas con las herramientas de desarrollo:
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| Entrar sin la cookie. | Tamaño Normal y ninguna cookie creada automáticamente. |
+| Elegir Grande y guardar. | El artículo aumenta de tamaño y el desplegable muestra Grande. |
+| Elegir Muy grande y guardar. | Se actualiza la misma cookie y aumenta de nuevo el tamaño. |
+| Recargar la página. | Se mantiene el tamaño elegido. |
+| Abrir la misma dirección en otra pestaña del mismo perfil. | Se recupera la preferencia. |
+| Cambiar manualmente el valor de la cookie a `gigante`. | La página utiliza Normal y sigue funcionando sin avisos de PHP. |
+| Restablecer la preferencia. | Desaparece la cookie y vuelve el tamaño Normal. |
+
+Además, observa en **Red**, con **Conservar registro** activado:
+
+* El **POST** que guarda la preferencia y su respuesta **303** con `Set-Cookie`.
+* El **GET** posterior, que envía la cookie mediante la cabecera `Cookie`.
+
+#### Entrega del ejercicio
+
+Entrega la carpeta **`ej06`** con el archivo `lectura.php` y un documento breve llamado **`comprobaciones.md`** que incluya:
+
+* Una captura de la cookie almacenada en Chrome.
+* Una captura donde se vea el artículo con tamaño Muy grande.
+* Tus respuestas a estas preguntas:
+
+1. ¿Por qué `$_COOKIE` no cambia automáticamente al ejecutar `setcookie()`?
+2. ¿Qué permite recuperar la preferencia al abrir otra pestaña?
+3. ¿Por qué debemos validar la cookie si la hemos creado desde nuestra propia aplicación?
+
+**En este ejercicio utilizaremos cookies, sin sesiones ni base de datos.** El objetivo es completar el recorrido: recibir una elección, validarla, guardarla en el navegador, recuperarla y aplicarla a una funcionalidad visible.
+
 ## Entrega y comprobación
 
 Entrega las carpetas de los ejercicios solicitados con el código comentado de forma breve. Comprueba cada regla y evita avisos de claves inexistentes o errores al recibir arrays inesperados. La forma concreta de entrega y el plazo se indicarán en Moodle.

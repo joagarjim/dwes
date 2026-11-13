@@ -57,6 +57,7 @@ nav:
       - 1. Peticiones y respuestas HTTP en PHP: unidad-04/01-peticiones-respuestas-http.md
       - 2. Formularios y validación: unidad-04/02-formularios-validacion.md
       - 3. Subida de archivos: unidad-04/03-subida-archivos.md
+      - 4. Cookies: unidad-04/04-cookies.md
 markdown_extensions:
   - admonition
   - attr_list
