@@ -277,6 +277,67 @@ Entrega la carpeta **`ej06`** con el archivo `lectura.php` y un documento breve 
 
 **En este ejercicio utilizaremos cookies, sin sesiones ni base de datos.** El objetivo es completar el recorrido: recibir una elección, validarla, guardarla en el navegador, recuperarla y aplicarla a una funcionalidad visible.
 
+## Bloque 5. Sesiones
+
+### Ejercicio 7. Un carrito que recuerda tus productos
+
+**Archivo:** `ej07/carrito.php`. Utiliza sesiones de PHP, sin JavaScript ni base de datos.
+
+Una tienda necesita conservar el carrito mientras se navega. No hay usuarios ni compras reales.
+
+#### 1. Catálogo y primera visita
+
+Define este catálogo en PHP. Trabaja los precios en céntimos y conviértelos a euros al mostrarlos:
+
+| Identificador | Producto | Precio |
+| --- | --- | ---: |
+| teclado | Teclado USB | 20,00 € |
+| raton | Ratón óptico | 12,50 € |
+| memoria | Memoria USB 64 GB | 9,90 € |
+
+Inicia una sesión con el nombre `UD04CARRITO`, antes del HTML. Guarda el carrito en `$_SESSION['carrito']` como un array que relaciona el identificador del producto con su cantidad. Inicialmente estará vacío. Iníciala con estas instrucciones:
+
+```php
+session_name('UD04CARRITO');
+session_start();
+```
+
+#### 2. Añadir productos
+
+Muestra el catálogo y un formulario POST por producto con `accion=anadir` y `producto` como identificador. Cada envío añade una unidad; si ya existe, incrementa su cantidad. Admite un máximo de 10 unidades por producto. El precio y el nombre proceden siempre del catálogo del servidor.
+
+Valida que el producto sea una cadena y una clave del catálogo. Rechaza productos o acciones desconocidos, campos enviados como arrays y cantidades que excedan el máximo, mostrando un error sin modificar el carrito.
+
+Después de una operación válida, redirige con estado 303 a `carrito.php` y termina la ejecución. Recargar el GET no debe añadir otra unidad.
+
+#### 3. Mostrar y vaciar
+
+Muestra una tabla con producto, precio unitario, cantidad y subtotal, y calcula el total. Escapa el texto al generar HTML y presenta los importes con dos decimales. Si está vacío, muestra «El carrito está vacío».
+
+Añade un formulario POST independiente con `accion=vaciar` que elimine solo `$_SESSION['carrito']`, sin destruir toda la sesión, y redirija con 303. La siguiente petición debe volver a disponer de un carrito vacío.
+
+#### 4. Comprobaciones
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| Primera visita. | Carrito vacío. |
+| Añadir dos teclados y un ratón. | Cantidades 2 y 1; total 52,50 €. |
+| Recargar tras añadir. | No se añade otra unidad. |
+| Abrir otra pestaña del mismo perfil. | Comparte el carrito; recarga para actualizar su vista. |
+| Incógnito sin sesión previa. | Carrito independiente. |
+| Añadir una unidad del producto que ya tiene 10. | Error; conserva las 10 unidades. |
+| Producto inventado, producto como array o acción desconocida. | Error; carrito sin cambios. |
+| Vaciar y recargar. | Carrito vacío. |
+
+#### Entrega
+
+Entrega `ej07/carrito.php` y `comprobaciones.md` con una captura del carrito, otra del POST 303 y GET 200 en Red, y las respuestas:
+
+1. ¿Qué guarda el navegador y qué guarda el servidor?
+2. ¿Por qué hay que llamar a `session_start()` en cada página que utilice la sesión?
+3. ¿Por qué vaciar el carrito no exige destruir toda la sesión?
+4. ¿Por qué no recibimos el precio del producto desde un campo oculto?
+
 ## Entrega y comprobación
 
 Entrega las carpetas de los ejercicios solicitados con el código comentado de forma breve. Comprueba cada regla y evita avisos de claves inexistentes o errores al recibir arrays inesperados. La forma concreta de entrega y el plazo se indicarán en Moodle.

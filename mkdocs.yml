@@ -58,6 +58,7 @@ nav:
       - 2. Formularios y validación: unidad-04/02-formularios-validacion.md
       - 3. Subida de archivos: unidad-04/03-subida-archivos.md
       - 4. Cookies: unidad-04/04-cookies.md
+      - 5. Sesiones: unidad-04/05-sesiones.md
 markdown_extensions:
   - admonition
   - attr_list
