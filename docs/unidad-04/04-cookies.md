@@ -8,6 +8,19 @@ En los formularios hemos devuelto los valores recibidos dentro del HTML para fac
 
 Una cookie es un pequeño dato que el navegador almacena para un sitio web. En las peticiones posteriores que cumplen sus condiciones de envío, el navegador lo devuelve al servidor.
 
+Por ejemplo:
+
+```text
+ud04_vista=lista
+```
+
+| Parte | Significado |
+| --- | --- |
+| `ud04_vista` | Nombre de la cookie, elegido por nuestra aplicación. |
+| `lista` | Valor guardado: la preferencia de visualización. |
+
+**En este ejemplo nosotros elegimos tanto el nombre como el valor.**
+
 El servidor puede solicitar su creación mediante una cabecera **`Set-Cookie`**. Cuando corresponde enviarla, el navegador utiliza una cabecera **`Cookie`**. PHP permite consultar lo recibido en **`$_COOKIE`**.
 
 | Operación | Quién interviene | Herramienta en PHP |
@@ -21,36 +34,62 @@ Las cookies sirven, por ejemplo, para recordar un idioma, un modo de visualizaci
 !!! important "Un dato del navegador"
     El usuario puede borrar o modificar una cookie, y el navegador puede bloquearla. La aplicación debe funcionar con un valor predeterminado cuando no esté disponible y validar lo recibido antes de utilizarlo.
 
-## 4.2. El recorrido entre dos peticiones
+## 4.2. Antes de empezar: solicitudes y respuestas HTTP
 
-Imaginemos una preferencia de catálogo:
+Cada vez que abrimos una página, el navegador envía una **solicitud HTTP** y el servidor devuelve una **respuesta HTTP**. Si la dirección corresponde a un archivo PHP, el servidor lo ejecuta y devuelve el resultado, no el código PHP.
 
-1. El usuario elige «Lista» y envía el formulario.
-2. PHP valida la elección y llama a `setcookie`.
-3. La respuesta pide al navegador guardar `ud04_vista=lista`.
-4. En una nueva petición, el navegador envía esa cookie si corresponde.
-5. PHP la recoge en `$_COOKIE['ud04_vista']` y prepara la página con esa preferencia.
+Representaremos los mensajes en HTTP/1.1:
 
-Representado de forma simplificada en HTTP/1.1:
+```http
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
 
-**Respuesta del servidor que solicita el almacenamiento:**
+```
+
+La primera línea es la **línea de petición**: método, ruta y versión de HTTP. Después van las cabeceras. Una línea en blanco las separa del cuerpo, si existe. Este GET no lleva cuerpo.
+
+Una respuesta puede ser:
 
 ```http
 HTTP/1.1 200 OK
-Set-Cookie: ud04_vista=lista; Path=/; SameSite=Lax; HttpOnly
+Content-Type: text/html; charset=UTF-8
+
+<h1>Preferencias del catálogo</h1>
 ```
 
-**Petición posterior del navegador:**
+La primera línea es la **línea de estado**. `200 OK` indica que la petición se ha atendido correctamente. Las cabeceras describen la respuesta; el cuerpo contiene aquí el HTML que muestra el navegador. En otras respuestas podría contener JSON, una imagen o ningún contenido.
+
+### Dónde viaja la cookie
+
+Al ejecutar `setcookie()`, PHP incorpora **Set-Cookie a las cabeceras de la respuesta**. El navegador recibe la instrucción y guarda la cookie si la acepta:
 
 ```http
-GET /unidad-04/preferencias.php HTTP/1.1
-Host: localhost:8080
-Cookie: ud04_vista=lista
+HTTP/1.1 200 OK
+Set-Cookie: ud04_vista=lista; Path=/; HttpOnly; SameSite=Lax
+Content-Type: text/html; charset=UTF-8
+
+<p>La página puede enviar una cookie y HTML en la misma respuesta.</p>
 ```
 
-El segundo intercambio no transporta de nuevo todas las opciones de la cookie. En `Cookie` viaja su nombre y valor; el navegador aplica las condiciones que recibió al guardarla.
+Este es un ejemplo del intercambio, no el código del formulario completo que construiremos después. En una petición posterior, el navegador devuelve la cookie:
 
-Las peticiones son independientes. **La continuidad se consigue porque el navegador vuelve a enviar el dato**, no porque la variable PHP de la primera petición se conserve.
+```http
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
+Cookie: ud04_vista=lista
+
+```
+
+| Mensaje | Cabecera | Qué significa |
+| --- | --- | --- |
+| Respuesta del servidor. | `Set-Cookie: ud04_vista=lista; ...` | Solicita guardar la cookie con sus opciones. |
+| Petición posterior del navegador. | `Cookie: ud04_vista=lista` | Devuelve el nombre y el valor guardados. |
+
+Las opciones, como ruta o caducidad, no se repiten dentro de `Cookie`: el navegador las aplica para decidir cuándo enviar la cookie.
+
+**No hace falta redirigir para enviar una cookie.** `setcookie()` prepara `Set-Cookie`; `header('Location: ...')` añade una instrucción diferente: solicitar otra página. En el ejemplo completo combinaremos ambas en una respuesta 303.
+
+Las peticiones son independientes. **La continuidad se consigue porque el navegador vuelve a enviar el dato**, no porque las variables PHP sigan existiendo.
 
 ## 4.3. Crear una cookie con setcookie
 
@@ -88,39 +127,117 @@ Si devuelve `true`, PHP ha preparado la cabecera correctamente; eso **no demuest
 
 ## 4.4. Leer una cookie: lo que llegó en la petición
 
+Una vez guardada, el navegador puede devolver la cookie en otra solicitud:
+
+```http
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
+Cookie: ud04_vista=lista
+
+```
+
+PHP recoge las cookies recibidas en el array **`$_COOKIE`**:
+
 ```php
 $vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
 ```
 
-Si falta la cookie, utilizamos el valor predeterminado. Pero también comprobaremos su tipo y las opciones que permite la aplicación:
+Significa: si llega la cookie, utiliza su valor; si no llega, utiliza `cuadricula`. **El valor predeterminado solo se asigna a una variable PHP: no crea una cookie.**
+
+### 1. Comprobamos que el valor sea válido
+
+El usuario puede modificar la cookie. Aceptamos únicamente los valores previstos:
 
 ```php
-$permitidas = ['cuadricula', 'lista'];
-$recibida = $_COOKIE['ud04_vista'] ?? '';
+$vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
 
-if (is_string($recibida) && in_array($recibida, $permitidas, true)) {
-    $vista = $recibida;
-} else {
+if ($vista !== 'cuadricula' && $vista !== 'lista') {
     $vista = 'cuadricula';
 }
 ```
 
-No utilizaremos la cookie directamente como una ruta, un precio o un permiso. Para nuestra preferencia solo se aceptan dos valores conocidos.
+La condición significa: si no es Cuadrícula ni Lista, utiliza Cuadrícula. Las comparaciones estrictas también rechazan un valor recibido como array.
 
-### ¿Por qué no aparece justo después de crearla?
+| Cookie recibida | Valor final de `$vista` |
+| --- | --- |
+| No llega. | `cuadricula` |
+| `ud04_vista=lista` | `lista` |
+| `ud04_vista=cuadricula` | `cuadricula` |
+| `ud04_vista=inventada` | `cuadricula` |
 
-Este fragmento no actualiza automáticamente `$_COOKIE`:
+### 2. Por qué setcookie() no cambia $_COOKIE inmediatamente
+
+Imagina una primera petición sin nuestra cookie:
+
+```http
+GET /ejemplo.php HTTP/1.1
+Host: localhost:8080
+
+```
+
+PHP ejecuta:
 
 ```php
 setcookie('ud04_vista', 'lista', ['path' => '/']);
 $vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
 ```
 
-`$_COOKIE` contiene lo que el navegador envió **al comenzar esta petición**. `setcookie` prepara una instrucción para la **respuesta**. Si antes no había cookie, esta lectura seguirá dando `cuadricula`; si había otra, leerá su valor anterior.
+Aunque acabamos de llamar a `setcookie()`, **$vista vale cuadricula**. Cada instrucción trabaja con un mensaje diferente:
 
-Para mostrar el valor nuevo inmediatamente podríamos usar la variable validada del POST. En el ejemplo completo aplicaremos **POST/Redirect/GET**, para leerlo en la siguiente petición después de que el navegador haya recibido la cookie.
+| Instrucción | Qué utiliza |
+| --- | --- |
+| `$_COOKIE['ud04_vista']` | Lo que llegó en la solicitud actual. |
+| `setcookie(...)` | Prepara una instrucción para la respuesta. |
 
-Asignar `$_COOKIE['ud04_vista'] = 'lista';` solo modifica el array de la ejecución actual: **no guarda una cookie en el navegador**.
+En esta solicitud no llegó la cookie. La respuesta solicita guardarla:
+
+```http
+HTTP/1.1 200 OK
+Set-Cookie: ud04_vista=lista; Path=/
+Content-Type: text/html; charset=UTF-8
+
+<!-- Contenido de la página -->
+```
+
+Si el navegador la acepta, la guarda. En una petición posterior donde corresponda enviarla:
+
+```http
+GET /ejemplo.php HTTP/1.1
+Host: localhost:8080
+Cookie: ud04_vista=lista
+
+```
+
+Ahora sí, en esta nueva ejecución:
+
+```php
+$vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
+// $vista vale 'lista'.
+```
+
+Si ya existía una cookie con otro valor, `$_COOKIE` contendría ese valor anterior durante la petición en la que solicitamos actualizarla.
+
+### 3. Mostrar la preferencia nueva después de guardarla
+
+En el ejemplo completo utilizaremos:
+
+```php
+setcookie('ud04_vista', 'lista', $opciones);
+header('Location: preferencias.php', true, 303);
+exit;
+```
+
+El navegador recibe la cookie, la guarda y sigue la redirección mediante GET. **En ese nuevo GET devuelve la cookie actualizada**, y PHP puede leerla.
+
+También podríamos mostrar el valor nuevo utilizando directamente la elección validada del formulario, pero la redirección nos permite practicar POST → redirección → GET y evita repetir el formulario al recargar.
+
+Por último:
+
+```php
+$_COOKIE['ud04_vista'] = 'lista';
+```
+
+solo modifica el array de la ejecución actual. **No solicita guardar una cookie en el navegador.** Los mensajes HTTP se han simplificado para mostrar lo relevante.
 
 ## 4.5. Duración y ámbito
 
@@ -176,63 +293,56 @@ Mantendremos las mismas opciones. En particular, **nombre, dominio y ruta deben 
 
 ## 4.7. Ejemplo completo: recordar la vista del catálogo
 
-Guarda el archivo como **`preferencias.php`**. Permite elegir una vista, recordarla durante siete días y borrar la preferencia. Mostramos el nombre de la vista; no necesitamos construir todavía un catálogo ni añadir CSS.
+Vamos a crear **un único archivo, preferencias.php**, que muestra una preferencia, permite guardarla durante siete días y permite borrarla. Mostramos el nombre de la vista; no necesitamos CSS ni construir todavía un catálogo real.
+
+**Qué queremos comprobar:** las variables PHP se crean de nuevo en cada petición, pero el navegador puede conservar la preferencia y devolverla mediante una cookie.
+
+### 1. El archivo completo: preferencias.php
+
+Guárdalo en el servidor PHP local. GitHub Pages muestra los apuntes, pero no ejecuta PHP.
 
 ```php
 <?php
-declare(strict_types=1);
+// Valores y etiquetas definidos por la aplicación.
+$vistas = ['cuadricula' => 'Cuadrícula', 'lista' => 'Lista'];
 
-function e(string $texto): string
-{
-    return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-}
-
-$vistas = [
-    'cuadricula' => 'Cuadrícula',
-    'lista' => 'Lista',
-];
-
-// HTTP local de clase. En el despliegue mediante HTTPS: secure => true.
 $opciones = [
     'expires' => time() + 7 * 24 * 60 * 60,
     'path' => '/',
-    'secure' => false,
+    'secure' => false, // HTTP local; true con HTTPS.
     'httponly' => true,
     'samesite' => 'Lax',
 ];
 
-$error = '';
-$recibida = $_COOKIE['ud04_vista'] ?? '';
-$vista = 'cuadricula';
-
-if (is_string($recibida) && array_key_exists($recibida, $vistas)) {
-    $vista = $recibida;
+// Solo aceptamos los dos valores conocidos.
+$vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
+if ($vista !== 'cuadricula' && $vista !== 'lista') {
+    $vista = 'cuadricula';
 }
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
 
     if ($accion === 'guardar') {
         $elegida = $_POST['vista'] ?? '';
 
-        if (!is_string($elegida) || !array_key_exists($elegida, $vistas)) {
-            $error = 'Selecciona una vista válida.';
-        } elseif (setcookie('ud04_vista', $elegida, $opciones)) {
-            header('Location: preferencias.php', true, 303);
-            exit;
+        if ($elegida === 'cuadricula' || $elegida === 'lista') {
+            setcookie('ud04_vista', $elegida, $opciones);
         } else {
-            $error = 'No se ha podido preparar la cookie.';
+            $error = 'Selecciona una vista válida.';
         }
     } elseif ($accion === 'borrar') {
         $opciones['expires'] = time() - 3600;
-
-        if (setcookie('ud04_vista', '', $opciones)) {
-            header('Location: preferencias.php', true, 303);
-            exit;
-        }
-        $error = 'No se ha podido preparar el borrado.';
+        setcookie('ud04_vista', '', $opciones);
     } else {
         $error = 'La acción no es válida.';
+    }
+
+    if ($error === '') {
+        header('Location: preferencias.php', true, 303);
+        exit;
     }
 }
 ?>
@@ -244,217 +354,387 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 </head>
 <body>
     <h1>Preferencias del catálogo</h1>
-    <p>Vista actual: <strong><?= e($vistas[$vista]) ?></strong></p>
+    <p>Vista actual: <strong><?= $vistas[$vista] ?></strong></p>
 
     <?php if ($error !== ''): ?>
-        <p role="alert"><?= e($error) ?></p>
+        <p><?= $error ?></p>
     <?php endif; ?>
 
     <form action="preferencias.php" method="post">
         <label for="vista">Vista del catálogo:</label>
         <select id="vista" name="vista">
-            <?php foreach ($vistas as $codigo => $etiqueta): ?>
-                <option value="<?= e($codigo) ?>"
-                    <?= $vista === $codigo ? 'selected' : '' ?>>
-                    <?= e($etiqueta) ?>
-                </option>
-            <?php endforeach; ?>
+            <option value="cuadricula"
+                <?= $vista === 'cuadricula' ? 'selected' : '' ?>>
+                Cuadrícula
+            </option>
+            <option value="lista"
+                <?= $vista === 'lista' ? 'selected' : '' ?>>
+                Lista
+            </option>
         </select>
-        <button type="submit" name="accion" value="guardar">Guardar preferencia</button>
+        <button name="accion" value="guardar">Guardar preferencia</button>
     </form>
 
     <form action="preferencias.php" method="post">
-        <button type="submit" name="accion" value="borrar">Borrar preferencia</button>
+        <button name="accion" value="borrar">Borrar preferencia</button>
     </form>
 </body>
 </html>
 ```
 
-### El recorrido completo de la petición
+Hemos mantenido las comprobaciones necesarias para aceptar únicamente dos valores conocidos. Las comparaciones estrictas también rechazan arrays sin utilizarlos como claves. No necesitamos una función de escape en este ejemplo: las etiquetas y los mensajes que mostramos son textos definidos por la aplicación, no la entrada recibida directamente.
 
-En este ejemplo, **la cookie guarda una preferencia de visualización para recuperarla en futuras peticiones**. Vamos a seguir el recorrido de `preferencias.php`, suponiendo que todavía no existe la cookie.
+Las opciones de `setcookie()` se mantienen porque son parte del contenido que estamos aprendiendo. Suponemos que PHP puede preparar las cabeceras correctamente; el significado de su valor de retorno se ha explicado en el 4.3.
 
-#### 1. Entramos por primera vez
+### 2. Para qué sirven los formularios
 
-Al escribir la dirección en el navegador, este realiza una petición **GET**:
+Ambos formularios tienen `action="preferencias.php"` y `method="post"`: envían los datos al mismo archivo mediante POST.
+
+| Control | Dato enviado |
+| --- | --- |
+| Desplegable con `name="vista"`. | `vista=cuadricula` o `vista=lista`. |
+| Botón Guardar preferencia. | `accion=guardar`. |
+| Botón del segundo formulario. | `accion=borrar`. |
+
+El botón pulsado aporta su nombre y valor al envío. El formulario de borrado es independiente: no envía el desplegable del primer formulario.
+
+### 3. Primera solicitud: abrir la página sin cookie
+
+Abre `http://localhost:8080/preferencias.php` si el archivo está en la raíz pública. Si está en una subcarpeta, adapta la ruta. Partimos sin la cookie `ud04_vista`.
+
+El navegador todavía no ha recibido el formulario. Solicita la página:
 
 ```http
-GET /preferencias.php
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
+
 ```
 
-Todavía no envía nuestra cookie porque no la tiene guardada.
+PHP ejecuta el archivo desde el principio. Prepara el catálogo de vistas y las opciones, pero **crear esos arrays no crea ninguna cookie**.
 
-PHP ejecuta el fichero desde el principio:
+Después ejecuta:
 
 ```php
-$recibida = $_COOKIE['ud04_vista'] ?? '';
-$vista = 'cuadricula';
+$vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
 ```
 
-Como la cookie no existe, `$recibida` vale `''` y se mantiene la opción predeterminada: `cuadricula`.
+Como la cookie no existe, usa `cuadricula`. `??` evita consultar una clave inexistente sin alternativa. La comprobación posterior mantiene esa opción.
 
-No se ejecuta el bloque de procesamiento del formulario porque la petición es GET. PHP genera el HTML con la opción **Cuadrícula** seleccionada y lo devuelve al navegador.
+La petición es GET, de modo que se salta todo el bloque POST y genera el HTML. La respuesta es, simplificada:
 
-**Hasta aquí no hemos creado ninguna cookie:** estamos mostrando un valor predeterminado.
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
 
-#### 2. Seleccionamos «Lista» y pulsamos «Guardar»
-
-El navegador envía una nueva petición, ahora **POST**, al mismo fichero. Entre sus datos aparecen:
-
-```text
-vista=lista
-accion=guardar
+<h1>Preferencias del catálogo</h1>
+<p>Vista actual: <strong>Cuadrícula</strong></p>
+<form action="preferencias.php" method="post">
+    <!-- Desplegable con Cuadrícula seleccionada y botón Guardar -->
+</form>
+<form action="preferencias.php" method="post">
+    <!-- Botón Borrar preferencia -->
+</form>
 ```
 
-PHP vuelve a ejecutar el fichero **desde el principio**, con variables nuevas. Después entra en el bloque del POST y comprueba que `lista` es una opción permitida.
+**No hay Set-Cookie en esta respuesta:** mostramos el valor predeterminado sin guardarlo automáticamente. El navegador interpreta el HTML y muestra los formularios.
 
-Si es válida, ejecuta:
+### 4. Segunda solicitud: elegir Lista y guardar
+
+Seleccionamos Lista y pulsamos Guardar preferencia. El navegador envía:
+
+```http
+POST /preferencias.php HTTP/1.1
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 26
+
+vista=lista&accion=guardar
+```
+
+Todavía no envía nuestra cookie, porque no la hemos creado. Los datos del formulario viajan en el cuerpo y PHP los recibe en `$_POST`.
+
+PHP vuelve a ejecutar el archivo completo. La lectura inicial de `$_COOKIE` sigue sin encontrar una preferencia: al comenzar este POST, el navegador aún no la ha enviado.
+
+Ahora sí entra en el bloque POST. Obtiene `accion=guardar` y `vista=lista`. Comprueba que la vista es una de las dos opciones permitidas y ejecuta:
 
 ```php
 setcookie('ud04_vista', $elegida, $opciones);
+```
+
+En esta ejecución `$elegida` vale `lista`. `setcookie()` **prepara una cabecera de respuesta**, no modifica automáticamente `$_COOKIE`.
+
+Después ejecuta:
+
+```php
 header('Location: preferencias.php', true, 303);
 exit;
 ```
 
-En este recorrido, `$elegida` vale `'lista'`. El ejemplo completo también comprueba que `setcookie()` haya podido preparar la cabecera antes de redirigir.
-
-Esta respuesta incluye dos instrucciones para el navegador:
+`header()` prepara la redirección. `exit` termina el script sin llegar al HTML. La respuesta lleva ambas instrucciones:
 
 ```http
 HTTP/1.1 303 See Other
-Set-Cookie: ud04_vista=lista; ...
+Set-Cookie: ud04_vista=lista; Max-Age=604800; Path=/; HttpOnly; SameSite=Lax
 Location: preferencias.php
+
 ```
 
-- **`Set-Cookie`** le indica que guarde la preferencia.
-- **`Location` junto con el estado 303** le indica que solicite `preferencias.php` mediante GET.
+| Parte | Qué significa |
+| --- | --- |
+| 303 See Other. | Solicita continuar mediante GET en la dirección indicada. |
+| Set-Cookie. | Solicita guardar `ud04_vista=lista` durante siete días. |
+| Location. | Indica el destino: `preferencias.php`. |
 
-El `exit` termina la ejecución. En esta respuesta no necesitamos generar el formulario porque hemos indicado al navegador que haga otra petición.
+604800 son los segundos de siete días. PHP puede incluir además `Expires` con la fecha correspondiente. No aparece `Secure` porque hemos utilizado `secure=false` para HTTP local.
 
-> `setcookie()` envía la instrucción al navegador. No modifica automáticamente el contenido de `$_COOKIE` durante esa ejecución de PHP.
+**La cookie no depende de la redirección para enviarse:** ambas instrucciones viajan en las cabeceras de la misma respuesta. En este caso usamos la redirección para leer la preferencia nueva en el GET posterior y evitar repetir el POST al recargar.
 
-#### 3. El navegador guarda la cookie y sigue la redirección
+### 5. Tercera solicitud: seguir la redirección
 
-Si acepta la cookie, el navegador la guarda y realiza el GET indicado. Ahora la petición incluye:
+El navegador guarda la cookie si la acepta y sigue la redirección automáticamente:
 
 ```http
-GET /preferencias.php
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
+Cookie: ud04_vista=lista
+
+```
+
+Ahora sí envía la preferencia, dentro de la cabecera `Cookie`. No vuelve a enviar el formulario: este GET no contiene `vista=lista&accion=guardar` en el cuerpo.
+
+PHP comienza otra ejecución y encuentra:
+
+```php
+$vista = $_COOKIE['ud04_vista'] ?? 'cuadricula';
+```
+
+Esta vez `$vista` recibe `lista`, porque la cookie llegó en la solicitud. La comprobación acepta ese valor. Como es GET, se salta el procesamiento POST y genera el HTML:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+
+<h1>Preferencias del catálogo</h1>
+<p>Vista actual: <strong>Lista</strong></p>
+<form action="preferencias.php" method="post">
+    <!-- Desplegable con Lista seleccionada y botón Guardar -->
+</form>
+<form action="preferencias.php" method="post">
+    <!-- Botón Borrar preferencia -->
+</form>
+```
+
+No necesita reenviar `Set-Cookie` para leer la preferencia. El navegador ya la tiene guardada.
+
+El atributo `selected` del desplegable se genera mediante:
+
+```php
+<?= $vista === 'lista' ? 'selected' : '' ?>
+```
+
+Si la vista actual es Lista, PHP escribe `selected` en esa opción. Si no, escribe una cadena vacía. Así la selección coincide con el texto de la vista actual.
+
+### 6. Recargar o volver más tarde
+
+Mientras la cookie siga disponible y corresponda enviarla, el navegador incorpora:
+
+```http
 Cookie: ud04_vista=lista
 ```
 
-**Aquí está el paso fundamental: el navegador devuelve al servidor la cookie que había recibido.**
+En cada nueva petición, PHP la lee, comprueba el valor y genera la página. **Lo que ha permanecido es la cookie del navegador, no la variable $vista de la ejecución anterior.**
 
-PHP comienza otra ejecución y prepara `$_COOKIE` con las cookies recibidas. Por eso ahora:
+Si guardamos después Cuadrícula, el POST puede enviar a la vez la cookie anterior `ud04_vista=lista` en sus cabeceras y la nueva elección `vista=cuadricula` en el cuerpo. PHP responde con `Set-Cookie` para actualizarla; el GET posterior recibe el nuevo valor.
 
-```php
-$recibida = $_COOKIE['ud04_vista'] ?? '';
-```
+### 7. Solicitud para borrar la preferencia
 
-asigna `'lista'` a `$recibida`.
-
-El código comprueba que es una cadena y que corresponde a una opción del catálogo. Al ser válida:
-
-```php
-$vista = $recibida;
-```
-
-Por tanto, `$vista` pasa a valer `'lista'`. PHP genera el HTML mostrando **Lista** como preferencia actual y como opción seleccionada.
-
-#### 4. Recargamos o volvemos más tarde
-
-En cada petición a una dirección donde corresponda enviar esa cookie, el navegador vuelve a incluir:
+Pulsamos el botón del segundo formulario. El navegador envía:
 
 ```http
+POST /preferencias.php HTTP/1.1
+Host: localhost:8080
 Cookie: ud04_vista=lista
-```
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 13
 
-PHP la lee, la valida y recupera la preferencia. **No hace falta volver a ejecutar `setcookie()` para leerla**; en nuestro ejemplo solo lo hacemos al guardar o borrar.
-
-Las variables PHP desaparecieron al terminar cada ejecución. Lo que permanece entre peticiones es la cookie almacenada en el navegador.
-
-#### 5. Pulsamos «Borrar preferencia»
-
-El navegador envía un POST con:
-
-```text
 accion=borrar
 ```
 
-PHP responde con una cookie del mismo nombre y ámbito, pero con una fecha de caducidad pasada:
+La cookie todavía llega en este POST: el navegador no la ha borrado por pulsar un botón. Es el código PHP el que prepara la instrucción de borrado.
+
+PHP detecta la acción y ejecuta:
 
 ```php
 $opciones['expires'] = time() - 3600;
 setcookie('ud04_vista', '', $opciones);
 ```
 
-Eso indica al navegador que la elimine. Después se produce otra redirección 303.
+Mantiene el nombre y el ámbito de la cookie, pero indica una caducidad pasada. Después redirige y termina:
 
-En el nuevo GET, el navegador ya no envía `ud04_vista`. PHP vuelve a utilizar el valor predeterminado: **Cuadrícula**.
-
-#### ¿Qué estamos «siguiendo» en este ejemplo?
-
-Únicamente esta información:
-
-```text
-ud04_vista = lista
+```php
+header('Location: preferencias.php', true, 303);
+exit;
 ```
 
-No estamos guardando un historial de visitas ni identificando a una persona. **Estamos recordando una preferencia del navegador.** El nombre de la cookie y su valor viajan entre navegador y servidor; opciones como la caducidad y la ruta determinan cómo la conserva y cuándo la envía el navegador.
+La respuesta es, simplificada:
 
-La conexión con las sesiones es muy útil: **habitualmente las sesiones también utilizan una cookie**, pero esta guarda un identificador de sesión. Los datos que manejamos con `$_SESSION` se conservan en el servidor. En nuestro ejemplo, en cambio, el propio valor de la preferencia —`lista`— está guardado en la cookie del navegador.
+```http
+HTTP/1.1 303 See Other
+Set-Cookie: ud04_vista=deleted; Max-Age=0; Path=/; HttpOnly; SameSite=Lax
+Location: preferencias.php
 
-El botón de guardar tiene `name="accion"` y `value="guardar"`: al pulsarlo, su valor se envía y distingue la operación. El formulario de borrado envía `accion=borrar`.
+```
 
-Si el navegador bloquea las cookies, la página volverá a la vista predeterminada. Que se haya preparado la cabecera no confirma su almacenamiento. El ejemplo solo modifica una preferencia de presentación; la protección CSRF de operaciones con estado se explicará al trabajar con sesiones.
+Puede aparecer también `Expires` con una fecha pasada. `deleted` es un valor que PHP puede utilizar al preparar el borrado: no representa una preferencia nueva.
+
+### 8. Solicitud posterior al borrado
+
+Si el navegador procesa la instrucción, elimina la cookie y sigue la redirección:
+
+```http
+GET /preferencias.php HTTP/1.1
+Host: localhost:8080
+
+```
+
+Ya no envía `ud04_vista`. PHP vuelve a utilizar `cuadricula`, se salta el bloque POST y responde:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+
+<h1>Preferencias del catálogo</h1>
+<p>Vista actual: <strong>Cuadrícula</strong></p>
+<!-- Los dos formularios; Cuadrícula vuelve a estar seleccionada -->
+```
+
+**Volver al valor predeterminado no crea otra cookie.** Solo se crea o actualiza al guardar una elección válida.
+
+### 9. Resumen del recorrido
+
+| Navegador | Solicitud o respuesta | Qué hace PHP |
+| --- | --- | --- |
+| Abre la página sin preferencia. | GET → 200 con HTML. | Utiliza Cuadrícula sin crear la cookie. |
+| Elige Lista y guarda. | POST con vista y acción. | Comprueba la elección y prepara la cookie. |
+| Recibe las instrucciones. | 303 con Set-Cookie y Location. | Termina el POST sin generar HTML. |
+| Guarda la cookie y sigue la redirección. | GET con Cookie → 200. | Lee la preferencia y muestra Lista. |
+| Vuelve más tarde. | GET con Cookie → 200. | Recupera la preferencia recibida. |
+| Pulsa Borrar preferencia. | POST con accion=borrar y la cookie anterior. | Prepara el borrado. |
+| Recibe las instrucciones. | 303 con caducidad pasada y Location. | Termina el POST. |
+| Elimina la cookie y sigue la redirección. | GET sin nuestra cookie → 200. | Vuelve a Cuadrícula sin crear otra cookie. |
+
+### Tres ideas clave
+
+* **La cookie se guarda en el navegador; las variables PHP se reconstruyen en cada petición.**
+* **Set-Cookie va en la respuesta; Cookie vuelve en una petición posterior.**
+* **setcookie() solicita guardar o borrar la cookie; $_COOKIE contiene lo recibido en la petición actual y no cambia automáticamente al llamar a setcookie().**
+
+Aquí recordamos una preferencia del navegador, no un historial ni una identidad. Nosotros elegimos nombre y valor (`ud04_vista=lista`). En las sesiones del siguiente apartado, la cookie contendrá un identificador gestionado por PHP y los datos de `$_SESSION` permanecerán en el servidor.
+
+Los mensajes HTTP son representaciones didácticas en HTTP/1.1: omitimos cabeceras adicionales y abreviamos el HTML. Las fechas de caducidad reales las calcula PHP. Suponemos que el navegador acepta y procesa las cookies; si las bloquea, la página utiliza el valor predeterminado.
 
 ## 4.8. Inspeccionar y probar la cookie en Chrome
 
-Abre `preferencias.php` con nuestro servidor, por ejemplo:
+Vamos a comprobar **qué guarda el navegador y qué viaja en cada solicitud y respuesta**. Abre `preferencias.php` desde el servidor PHP local:
 
 ```text
-http://localhost:8080/unidad-04/preferencias.php
+http://localhost:8080/preferencias.php
 ```
 
-Adapta la ruta a la carpeta donde hayas guardado el archivo. Vamos a observar tanto la cookie almacenada como su recorrido en las peticiones y respuestas.
+Adapta la dirección si el archivo está en una subcarpeta.
 
-### Ver la cookie guardada: Aplicación
+### 1. Ver la cookie guardada: Aplicación
 
-1. Abre `preferencias.php` en Chrome.
-2. Pulsa **F12** o **Ctrl + Mayús + I** para abrir las herramientas de desarrollo.
-3. En la barra superior de las herramientas, busca **Aplicación** (*Application*). Si no aparece, pulsa **`»`** para ver las pestañas ocultas.
-4. En el panel izquierdo, busca **Almacenamiento** (*Storage*) y despliega **Cookies**.
-5. Selecciona la dirección de tu servidor, por ejemplo **`http://localhost:8080`**.
-6. En el formulario de la página, selecciona **Lista** y pulsa **Guardar preferencia**.
-7. Vuelve a la tabla de cookies: debería aparecer **`ud04_vista`**, con el valor **`lista`**. Comprueba también su ruta, caducidad y opciones.
+1. Pulsa **F12** para abrir las herramientas de desarrollo.
+2. Entra en **Aplicación (Application)**. Si no aparece, búscala en **»**.
+3. En el panel izquierdo, despliega **Almacenamiento → Cookies**.
+4. Selecciona tu servidor, por ejemplo `http://localhost:8080`.
+5. En la página, selecciona Lista y pulsa **Guardar preferencia**.
+6. Vuelve a la tabla de cookies.
 
-Si todavía no has guardado ninguna preferencia, es normal que no aparezca esta cookie: la primera visita solo utiliza el valor predeterminado.
-
-### Ver lo que viaja: Red
-
-1. Entra en la pestaña **Red** (*Network*) de las herramientas. Si está oculta, búscala también en **`»`**.
-2. Marca **Conservar registro** (*Preserve log*) para que las peticiones sigan visibles después de la redirección.
-3. Vuelve a guardar una preferencia desde el formulario.
-4. Localiza la petición **POST** a `preferencias.php`, con estado **303**. Selecciónala y abre **Cabeceras** (*Headers*).
-5. Dentro de **Cabeceras de respuesta** (*Response Headers*), busca **`Set-Cookie`**: es la instrucción que el servidor envía para guardar la preferencia. También verás **`Location`**, que indica el destino de la redirección.
-6. Selecciona el **GET** posterior a `preferencias.php`. En **Cabeceras de solicitud** (*Request Headers*), busca **`Cookie`**: contiene la preferencia que el navegador devuelve al servidor.
-
-Si no distingues el POST del GET, consulta **Método de solicitud** (*Request Method*) en la sección **General** de sus cabeceras. Los nombres de algunos controles pueden variar ligeramente según el idioma o la versión de Chrome.
-
-**Aplicación muestra lo que guarda el navegador; Red muestra lo que viaja en cada petición y respuesta.**
-
-Por último, pulsa **Borrar preferencia**. Comprueba en Aplicación que la cookie desaparece y en la página que vuelve **Cuadrícula**. En Red podrás observar la respuesta que solicita el borrado y el GET posterior.
-
-### Pruebas para comprobar el comportamiento
-
-| Prueba | Qué esperamos |
+| Campo | Valor esperado |
 | --- | --- |
-| Primera visita sin cookie. | Cuadrícula. |
-| Guardar Lista. | Lista tras la redirección. |
-| Volver a la misma URL desde otra pestaña del mismo perfil. | Se mantiene Lista. |
+| Nombre (Name) | `ud04_vista` |
+| Valor (Value) | `lista` |
+| Ruta (Path) | `/` |
+| Caducidad (Expires / Max-Age) | Aproximadamente siete días después del guardado. |
+| HttpOnly | Activado. |
+| Secure | Desactivado para HTTP local. |
+| SameSite | `Lax` |
+
+Si todavía no has guardado ninguna preferencia, **es normal que esta cookie no exista**: la primera visita solo utiliza Cuadrícula como valor predeterminado.
+
+### 2. Ver lo que viaja: Red
+
+1. Entra en **Red (Network)**.
+2. Marca **Conservar registro (Preserve log / Keep log)** para mantener visibles las peticiones después de la redirección.
+3. Selecciona Lista y pulsa **Guardar preferencia**.
+
+Verás dos peticiones a `preferencias.php`:
+
+| Petición | Estado de la respuesta | Motivo |
+| --- | ---: | --- |
+| POST | 303 | El formulario envía la elección y PHP responde con una redirección. |
+| GET | 200 | El navegador sigue la redirección y recibe la página actualizada. |
+
+**Son dos solicitudes al mismo archivo, no dos archivos diferentes.** Si no distingues el método, consulta Request Method en General dentro de Headers. Los nombres de algunos controles pueden variar según la versión o el idioma.
+
+### 3. Revisar el POST y su respuesta
+
+Selecciona el POST. En **Carga útil (Payload) → Datos del formulario (Form Data)**, busca:
+
+```text
+vista: lista
+accion: guardar
+```
+
+Son los datos que PHP recibe en `$_POST`. Después abre **Cabeceras (Headers) → Cabeceras de respuesta (Response Headers)**:
+
+```http
+Set-Cookie: ud04_vista=lista; ...
+Location: preferencias.php
+```
+
+`Set-Cookie` solicita guardar la preferencia. `Location`, junto con 303, indica la redirección. Si ya había una cookie, el POST también puede incluir su valor anterior en las cabeceras de solicitud.
+
+### 4. Revisar el GET posterior
+
+Selecciona el GET posterior al POST. En **Cabeceras de solicitud (Request Headers)**, busca:
+
+```http
+Cookie: ud04_vista=lista
+```
+
+**El navegador devuelve la cookie que acaba de guardar.** PHP la recibe en `$_COOKIE` y genera la página con Lista seleccionada.
+
+En **Respuesta (Response)** puedes consultar el HTML devuelto. No aparecerá el código PHP: ya se ha ejecutado.
+
+### 5. Comprobar el borrado
+
+Pulsa **Borrar preferencia** y observa:
+
+1. Un POST que envía `accion=borrar`.
+2. Una respuesta 303 con `Set-Cookie` que solicita borrar la cookie.
+3. Un GET posterior que ya no envía `ud04_vista`, si el navegador ha procesado el borrado.
+4. Una respuesta 200 que vuelve a mostrar Cuadrícula.
+
+En Aplicación → Cookies comprueba que `ud04_vista` ha desaparecido.
+
+### 6. Pruebas finales
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| Entrar sin la cookie. | Cuadrícula, sin crear automáticamente la cookie. |
+| Guardar Lista. | Cookie con valor `lista` y Lista seleccionada. |
+| Recargar. | Se mantiene la preferencia. |
+| Abrir otra pestaña del mismo perfil. | Recupera la misma preferencia. |
+| Guardar Cuadrícula. | Actualiza la misma cookie y su caducidad. |
+| Cambiar manualmente su valor a `inventada` y recargar. | La página utiliza Cuadrícula; no acepta el valor desconocido. |
+| Borrar la preferencia. | Desaparece la cookie y vuelve Cuadrícula. |
 | Cerrar la pestaña y volver durante la vigencia. | La preferencia persistente puede seguir disponible. |
-| Abrir un perfil privado independiente. | No comparte las cookies del perfil normal. |
-| Cambiar el valor de la cookie a `inventada` en las herramientas. | La aplicación utiliza Cuadrícula; no acepta el valor desconocido. |
-| Borrar la preferencia. | Desaparece la cookie y se utiliza Cuadrícula. |
+| Incógnito sin cookies previas del ejemplo. | No comparte la preferencia del perfil normal. |
+
+**Aplicación muestra lo que guarda el navegador; Red muestra lo que viaja en cada solicitud y respuesta.**
 
 ## 4.9. Buenas prácticas y errores habituales
 
@@ -481,6 +761,10 @@ Las cookies deben contener pocos datos. Sus tamaños y cantidades están limitad
 * Para actualizar y borrar hay que identificar la misma cookie por nombre, dominio y ruta.
 * Una cookie es entrada del cliente: validamos sus valores y prevemos que falte.
 * En el siguiente apartado veremos **sesiones**, para mantener datos en el servidor asociados a un navegador.
+
+## Anexo · Esquema de pizarra
+
+[Descargar el PDF: Recordar la vista del catálogo](../Pizarra_cookies_PHP.pdf)
 
 ## Practica lo aprendido
 

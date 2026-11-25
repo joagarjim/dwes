@@ -1320,6 +1320,10 @@ Estas pruebas corresponden al ejemplo simplificado. Las validaciones de entradas
 
 Cerrar una pestaña no equivale a cerrar la sesión. Tampoco debemos garantizar que cerrar el navegador elimine inmediatamente una cookie de sesión: la restauración del navegador y la configuración del servidor afectan a su duración. Una sesión no sustituye a una base de datos para información que deba conservarse de forma duradera.
 
+## Anexo · Esquema de pizarra
+
+[Descargar el PDF: Una página con memoria](../Pizarra_sesiones_PHP.pdf)
+
 ## Practica lo aprendido
 
 Realiza el **ejercicio 7 del bloque 5: Sesiones**, «Un carrito que recuerda tus productos», en la [relación de actividades](actividades.md#bloque-5-sesiones). El enunciado y la solución del profesor se mantienen separados.
