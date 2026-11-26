@@ -338,6 +338,80 @@ Entrega `ej07/carrito.php` y `comprobaciones.md` con una captura del carrito, ot
 3. ¿Por qué vaciar el carrito no exige destruir toda la sesión?
 4. ¿Por qué no recibimos el precio del producto desde un campo oculto?
 
+## Bloque 6. Autenticación
+
+### Ejercicio 8. Zona privada del aula con dos usuarios
+
+**Carpeta:** `ej08`. Utiliza PHP y sesiones, sin JavaScript ni base de datos. Crea `usuarios.php`, `login.php`, `privada.php` y `logout.php`.
+
+Queremos una zona privada del aula. Dos usuarios podrán identificarse y ver un saludo con su nombre completo. Ambos tienen los mismos permisos; no se piden roles ni registro de nuevas cuentas.
+
+#### 1. Usuarios de prueba
+
+| Usuario | Nombre mostrado | Contraseña de prueba |
+| --- | --- | --- |
+| ana | Ana López | clave123 |
+| luis | Luis García | clave456 |
+
+En `usuarios.php` define un array que relacione cada usuario con su nombre y su **hash de contraseña**. Genera los hashes una sola vez con `password_hash()`; no los generes de nuevo en cada petición. Las contraseñas de la tabla son solo para comprobar la actividad.
+
+Carga ese archivo desde login.php con `require_once __DIR__ . '/usuarios.php';`. Las contraseñas no se guardarán como texto en los archivos de la aplicación, en cookies ni en `$_SESSION`.
+
+#### 2. Formulario y acceso
+
+Utiliza `session_name('UD04EJ08')` y `session_start()` antes del HTML en los archivos que trabajen con la sesión. Mantén el mismo nombre en todos ellos.
+
+`login.php` debe mostrar campos `usuario` y `clave`, enviados mediante POST al propio archivo. En la primera visita no muestra error.
+
+Comprueba que ambos campos sean cadenas, que el usuario exista en el array y que su contraseña sea correcta mediante `password_verify()`. Si algo falla, muestra «Usuario o contraseña incorrectos», sin crear un acceso nuevo. No devuelvas la contraseña en el HTML.
+
+Si el acceso es correcto:
+
+1. Renueva el identificador con `session_regenerate_id(true)`.
+2. Guarda en la sesión el usuario y su nombre mostrado, obtenidos del array del servidor.
+3. Redirige con estado 303 a `privada.php` y termina la ejecución.
+
+#### 3. Página protegida
+
+`privada.php` debe recuperar la sesión y comprobar el acceso antes de enviar HTML. Si no hay un usuario autenticado, redirige con 303 a login.php y termina.
+
+Si está autenticado, muestra «Bienvenida, Ana López» o «Bienvenido, Luis García», o un saludo neutro equivalente, y dos párrafos de contenido privado sobre actividades del aula. Escapa el nombre al insertarlo en HTML. Incluye un formulario POST dirigido a logout.php con un botón Cerrar sesión.
+
+#### 4. Cierre de sesión
+
+`logout.php` cerrará la sesión solo al recibir POST: vacía `$_SESSION`, destruye la sesión y solicita borrar la cookie `UD04EJ08`. Después redirige con 303 a login.php y termina. Abrir logout.php mediante GET no debe cerrar el acceso.
+
+Comprueba el ámbito de la cookie. En el entorno de clase empleamos ruta `/` y sin dominio explícito, igual que en los apuntes.
+
+#### 5. Pruebas
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| Primera visita. | Formulario sin errores. |
+| ana / clave123. | Accede y muestra Ana López; identificador renovado. |
+| Cerrar y entrar con luis / clave456. | Accede y muestra Luis García. |
+| Usuario desconocido o contraseña incorrecta desde sesión anónima. | Error genérico; no accede a la página privada. |
+| Usuario o clave enviados como array. | Error, sin avisos ni errores de tipos. |
+| URL privada sin autenticar. | Redirige sin enviar el contenido privado. |
+| Recargar la página privada. | Mantiene el acceso de esa sesión sin repetir el POST. |
+| Cerrar y solicitar de nuevo la página privada. | No accede; vuelve al formulario. |
+| Otra pestaña del mismo perfil. | Comparte normalmente el acceso; después de cerrar, al recargar ya no accede. |
+| Incógnito sin sesión previa. | No comparte la autenticación del perfil normal. |
+
+#### Entrega
+
+Entrega los cuatro archivos PHP y `comprobaciones.md` con:
+
+* Una captura del saludo de cada usuario.
+* Una captura de Red con el POST 303 de acceso y el GET 200 de la página privada. Usa solo credenciales de prueba y oculta el identificador real de sesión.
+* Respuestas breves:
+
+1. ¿Por qué tener la cookie de sesión no basta para estar autenticado?
+2. ¿Qué cambia y qué se conserva al ejecutar session_regenerate_id(true)?
+3. ¿Por qué privada.php debe comprobar el acceso aunque el formulario ya haya validado la contraseña?
+4. ¿Por qué al cerrar puede aparecer otra cookie sin que exista un acceso autenticado?
+5. ¿Qué diferencia hay entre password_hash() y password_verify()?
+
 ## Entrega y comprobación
 
 Entrega las carpetas de los ejercicios solicitados con el código comentado de forma breve. Comprueba cada regla y evita avisos de claves inexistentes o errores al recibir arrays inesperados. La forma concreta de entrega y el plazo se indicarán en Moodle.

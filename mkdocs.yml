@@ -51,7 +51,7 @@ nav:
       - 4. Herencia y polimorfismo: unidad-03/04-herencia-polimorfismo.md
       - 5. Interfaces en PHP: unidad-03/05-interfaces.md
       - 6. Excepciones, pruebas y documentación: unidad-03/06-excepciones-pruebas-documentacion.md
-      - 7. Actividad final: unidad-03/07-actividad-final.md
+      - 7. Actividad final de la unidad: unidad-03/07-actividad-final.md
   - Unidad 4. Desarrollo de aplicaciones web con PHP:
       - Presentación: unidad-04/index.md
       - 1. Peticiones y respuestas HTTP en PHP: unidad-04/01-peticiones-respuestas-http.md
@@ -59,6 +59,8 @@ nav:
       - 3. Subida de archivos: unidad-04/03-subida-archivos.md
       - 4. Cookies: unidad-04/04-cookies.md
       - 5. Sesiones: unidad-04/05-sesiones.md
+      - 6. Autenticación básica: unidad-04/06-autenticacion.md
+      - 7. Actividad final de la unidad: unidad-04/07-actividad-final.md
 markdown_extensions:
   - admonition
   - attr_list
